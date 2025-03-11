@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Button styles -->
+    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:textColor">@color/colorSurface</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="PrimaryButtonStyle" parent="ButtonStyle">
+        <item name="backgroundTint">@color/colorPrimary</item>
+    </style>
+
+    <style name="AccentButtonStyle" parent="ButtonStyle">
+        <item name="backgroundTint">@color/colorAccent</item>
+    </style>
+
+    <!-- Text Input styles -->
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/colorPrimary</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="hintTextColor">@color/colorTextSecondary</item>
+    </style>
+
+    <!-- Card styles -->
+    <style name="CardViewStyle" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/colorSurface</item>
+        <item name="cardElevation">2dp</item>
+        <item name="cardCornerRadius">8dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+</resources>

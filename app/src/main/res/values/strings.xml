@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Dory</string>
+    <string name="create_event_heading">Create an Event</string>
+    <string name="event_name_input">Event name</string>
 </resources>
