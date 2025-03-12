@@ -2,8 +2,11 @@ package com.example.dory.userDatabase;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
 
 public class UserDBHandler extends  SQLiteOpenHelper {
     private static final String DB_NAME = "userdb";
@@ -68,6 +71,52 @@ public class UserDBHandler extends  SQLiteOpenHelper {
 
         db.insert(TABLE_NAME, null, values);
         db.close();
+    }
+
+    public ArrayList<User> getAllUsers(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        ArrayList<User> userArray = new ArrayList<>();
+
+        if(cursorCourses.moveToFirst()){
+            do{
+                userArray.add(new User(
+                        cursorCourses.getString(1),
+                        cursorCourses.getString(2),
+                        cursorCourses.getString(3).getBytes(),
+                        cursorCourses.getString(4).getBytes(),
+                        cursorCourses.getString(5),
+                        cursorCourses.getString(6)
+                ));
+            } while (cursorCourses.moveToNext());
+        }
+        cursorCourses.close();
+        return userArray;
+    }
+
+    public User getUser(String email){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE email='" + email + "'", null);
+        User user = null;
+
+        cursorCourses.moveToFirst();
+        user = new User(
+                cursorCourses.getString(1),
+                cursorCourses.getString(2),
+                cursorCourses.getString(3).getBytes(),
+                cursorCourses.getString(4).getBytes(),
+                cursorCourses.getString(5),
+                cursorCourses.getString(6)
+        );
+        cursorCourses.close();
+        return user;
+    }
+
+    public boolean validateUser(String email, String password){
+        User user = getUser(email);
+        byte[] salt = user.getSalt();
+        byte[] hash = user.getHash();
+        return PasswordHandler.validatePassword(password.toCharArray(), salt, hash);
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

@@ -1,24 +1,22 @@
 package com.example.dory.userDatabase;
 
 public class User {
-    private int id;
     private String name;
     private String email;
-    private String salt;
-    private String hash;
+    private byte[] salt;
+    private byte[] hash;
     private String role;
     private String photo;
+    private int id;
 
-    public User(int id, String name, String email, String salt, String hash, String role){
-        this.id = id;
+    public User(String name, String email, byte[] salt, byte[] hash, String role){
         this.name = name;
         this.email = email;
         this.salt = salt;
         this.hash = hash;
         this.role = role;
     }
-    public User(int id, String name, String email, String salt, String hash, String role, String photo){
-        this.id = id;
+    public User(String name, String email, byte[] salt, byte[] hash, String role, String photo){
         this.name = name;
         this.email = email;
         this.salt = salt;
@@ -51,19 +49,19 @@ public class User {
         this.email = email;
     }
 
-    public String getHash() {
+    public byte[] getHash() {
         return hash;
     }
 
-    public void setHash(String hash) {
+    public void setHash(byte[] hash) {
         this.hash = hash;
     }
 
-    public String getSalt() {
+    public byte[] getSalt() {
         return salt;
     }
 
-    public void setSalt(String salt) {
+    public void setSalt(byte[] salt) {
         this.salt = salt;
     }
 
