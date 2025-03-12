@@ -3,34 +3,20 @@ package com.example.dory.userDatabase;
 public class User {
     private String name;
     private String email;
-    private byte[] salt;
-    private byte[] hash;
+    private String salt;
+    private String hash;
     private String role;
-    private String photo;
-    private int id;
+    private String profilePhoto;
+    private String organizationName;
+    private String contactInfo;
+    private int user_id;
 
-    public User(String name, String email, byte[] salt, byte[] hash, String role){
-        this.name = name;
-        this.email = email;
-        this.salt = salt;
-        this.hash = hash;
-        this.role = role;
-    }
-    public User(String name, String email, byte[] salt, byte[] hash, String role, String photo){
-        this.name = name;
-        this.email = email;
-        this.salt = salt;
-        this.hash = hash;
-        this.role = role;
-        this.photo = photo;
+    public int getUser_id() {
+        return user_id;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     public String getName() {
@@ -49,20 +35,20 @@ public class User {
         this.email = email;
     }
 
-    public byte[] getHash() {
-        return hash;
-    }
-
-    public void setHash(byte[] hash) {
-        this.hash = hash;
-    }
-
-    public byte[] getSalt() {
+    public String getSalt() {
         return salt;
     }
 
-    public void setSalt(byte[] salt) {
+    public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public String getRole() {
@@ -73,11 +59,43 @@ public class User {
         this.role = role;
     }
 
-    public String getPhoto() {
-        return photo;
+    public String getProfilePhoto() {
+        return profilePhoto;
     }
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
+    }
+
+    public String getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
+    }
+
+    public User(String name, String email, String salt, String hash, String role){
+        this.name = name;
+        this.email = email;
+        this.salt = salt;
+        this.hash = hash;
+        this.role = role;
+    }
+    public User(String name, String email, String salt, String hash, String role, String photo){
+        this.name = name;
+        this.email = email;
+        this.salt = salt;
+        this.hash = hash;
+        this.role = role;
+        this.profilePhoto = photo;
     }
 }

@@ -16,18 +16,20 @@ public class PasswordHandler {
 
     private PasswordHandler(){}
 
-    public static byte[] getNewSalt(){
+    public static String getNewSalt(){
         byte[] salt = new byte[16];
         RANDOM.nextBytes(salt);
-        return salt;
+        return Arrays.toString(salt);
     }
 
-    public static byte[] hash(char[] password, byte[] salt){
-        PBEKeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, KEY_LENGTH);
-        Arrays.fill(password, Character.MIN_VALUE);
+    public static String hash(String password, String salt){
+        char[] passwordChar = password.toCharArray();
+        byte[] saltBytes = salt.getBytes();
+        PBEKeySpec spec = new PBEKeySpec(passwordChar, saltBytes, ITERATIONS, KEY_LENGTH);
+        Arrays.fill(passwordChar, Character.MIN_VALUE);
         try{
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            return skf.generateSecret(spec).getEncoded();
+            return Arrays.toString(skf.generateSecret(spec).getEncoded());
         }
         catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException("Error while hashing password: " + e.getMessage());
@@ -37,14 +39,16 @@ public class PasswordHandler {
         }
     }
 
-    public static boolean validatePassword(char[] password, byte[] salt, byte[] expectedHash){
-        byte[] passwordHash = hash(password, salt);
-        Arrays.fill(password, Character.MIN_VALUE);
+    public static boolean validatePassword(String password, String salt, String expectedHash){
+        char[] passwordChar = password.toCharArray();
+        byte[] expectedHashBytes = expectedHash.getBytes();
+        byte[] passwordHash = hash(password, salt).getBytes();
+        Arrays.fill(passwordChar, Character.MIN_VALUE);
         if (passwordHash.length != expectedHash.length){
             return false;
         }
         for (int i=0; i<passwordHash.length; i++){
-            if(passwordHash[i] != expectedHash[i]){
+            if(passwordHash[i] != expectedHashBytes[i]){
                 return false;
             }
         }
