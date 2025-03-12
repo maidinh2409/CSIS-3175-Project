@@ -35,9 +35,12 @@ public class UserDBHandler extends  SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public void addNewUser(String name, String email, byte[] hash, byte[] salt, String role){
+    public void addNewUser(String name, String email, String password, String role){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
+        byte[] salt = PasswordHandler.getNewSalt();
+        byte[] hash = PasswordHandler.hash(password.toCharArray(), salt);
 
         values.put(NAME_COL, name);
         values.put(EMAIL_COL, email);
@@ -49,9 +52,12 @@ public class UserDBHandler extends  SQLiteOpenHelper {
         db.close();
     }
 
-    public void addNewUser(String name, String email, byte[] hash, byte[] salt, String role, String photo){
+    public void addNewUser(String name, String email, String password, String role, String photo){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
+        byte[] salt = PasswordHandler.getNewSalt();
+        byte[] hash = PasswordHandler.hash(password.toCharArray(), salt);
 
         values.put(NAME_COL, name);
         values.put(EMAIL_COL, email);
