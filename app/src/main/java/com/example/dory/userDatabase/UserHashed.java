@@ -1,9 +1,10 @@
 package com.example.dory.userDatabase;
 
-public class User {
+public class UserHashed {
     private String name;
     private String email;
-    private String password;
+    private String salt;
+    private String hash;
     private String role;
     private String profilePhoto;
     private String organizationName;
@@ -34,12 +35,20 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getSalt() {
+        return salt;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public String getRole() {
@@ -74,40 +83,33 @@ public class User {
         this.contactInfo = contactInfo;
     }
 
-    public User(String name, String email, String password, String role){
+    public UserHashed(String name, String email, String salt, String hash, String role){
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.salt = salt;
+        this.hash = hash;
         this.role = role;
-        this.profilePhoto = null;
-        this.organizationName = organizationName;
-        this.contactInfo = contactInfo;
     }
-    public User(String name, String email, String password, String role, String photo){
+    public UserHashed(String name, String email, String salt, String hash, String role, String photo, String organizationName, String contactInfo){
         this.name = name;
         this.email = email;
-        this.password = password;
-        this.role = role;
-        this.profilePhoto = photo;
-        this.organizationName = null;
-        this.contactInfo = null;
-    }
-    public User(String name, String email, String password, String role, String photo, String organizationName){
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.profilePhoto = photo;
-        this.organizationName = organizationName;
-        this.contactInfo = null;
-    }
-    public User(String name, String email, String password, String role, String photo, String organizationName, String contactInfo){
-        this.name = name;
-        this.email = email;
-        this.password = password;
+        this.salt = salt;
+        this.hash = hash;
         this.role = role;
         this.profilePhoto = photo;
         this.organizationName = organizationName;
         this.contactInfo = contactInfo;
+    }
+
+    public UserHashed(String name, String email, String salt, String hash, String role, String photo, String organizationName, String contactInfo, int user_id){
+        this.name = name;
+        this.email = email;
+        this.salt = salt;
+        this.hash = hash;
+        this.role = role;
+        this.profilePhoto = photo;
+        this.organizationName = organizationName;
+        this.contactInfo = contactInfo;
+        this.user_id = user_id;
     }
 }
