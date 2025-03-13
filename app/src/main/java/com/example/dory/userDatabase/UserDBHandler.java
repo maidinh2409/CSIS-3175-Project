@@ -42,84 +42,102 @@ public class UserDBHandler extends  SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public void addNewUser(String name, String email, String password, String role){
+    public void addNewUser(User user){
+        if(user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getRole() == null){
+            throw new IllegalArgumentException("name, email, password, or role cannot be null");
+        }
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         String salt = PasswordHandler.getNewSalt();
-        String hash = PasswordHandler.hash(password, salt);
+        String hash = PasswordHandler.hash(user.getPassword(), salt);
 
-        values.put(NAME_COL, name);
-        values.put(EMAIL_COL, email);
+        values.put(NAME_COL, user.getName());
+        values.put(EMAIL_COL, user.getEmail());
         values.put(PASSWORD_HASH_COL, hash);
         values.put(PASSWORD_SALT_COL, salt);
-        values.put(ROLE_COL, role);
+        values.put(ROLE_COL, user.getRole());
+        values.put(PHOTO_COL, user.getProfilePhoto());
+        values.put(ORGANIZATION_COL, user.getOrganizationName());
+        values.put(CONTACT_COL, user.getContactInfo());
 
         db.insert(TABLE_NAME, null, values);
         db.close();
     }
 
-    public void addNewUser(String name, String email, String password, String role, String photo){
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        String salt = PasswordHandler.getNewSalt();
-        String hash = PasswordHandler.hash(password, salt);
-
-        values.put(NAME_COL, name);
-        values.put(EMAIL_COL, email);
-        values.put(PASSWORD_HASH_COL, hash);
-        values.put(PASSWORD_SALT_COL, salt);
-        values.put(ROLE_COL, role);
-        values.put(PHOTO_COL, photo);
-
-        db.insert(TABLE_NAME, null, values);
-        db.close();
-    }
-
-    public ArrayList<User> getAllUsers(){
+    public ArrayList<UserHashed> getAllUsers(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursorCourses = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-        ArrayList<User> userArray = new ArrayList<>();
+        ArrayList<UserHashed> userHashedArray = new ArrayList<>();
 
         if(cursorCourses.moveToFirst()){
             do{
-                userArray.add(new User(
+                userHashedArray.add(new UserHashed(
                         cursorCourses.getString(1),
                         cursorCourses.getString(2),
                         cursorCourses.getString(3),
                         cursorCourses.getString(4),
                         cursorCourses.getString(5),
-                        cursorCourses.getString(6)
+                        cursorCourses.getString(6),
+                        cursorCourses.getString(7),
+                        cursorCourses.getString(8),
+                        cursorCourses.getInt(0)
                 ));
             } while (cursorCourses.moveToNext());
         }
         cursorCourses.close();
-        return userArray;
+        return userHashedArray;
     }
 
-    public User getUser(String email){
+    public UserHashed getUser(String email){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursorCourses = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE email='" + email + "'", null);
-        User user = null;
+        UserHashed userHashed = null;
 
         cursorCourses.moveToFirst();
-        user = new User(
+        userHashed = new UserHashed(
                 cursorCourses.getString(1),
                 cursorCourses.getString(2),
                 cursorCourses.getString(3),
                 cursorCourses.getString(4),
                 cursorCourses.getString(5),
-                cursorCourses.getString(6)
+                cursorCourses.getString(6),
+                cursorCourses.getString(7),
+                cursorCourses.getString(8),
+                cursorCourses.getInt(0)
         );
         cursorCourses.close();
-        return user;
+        return userHashed;
     }
 
+    public void updateUser(User user){
+        if(user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getRole() == null){
+            throw new IllegalArgumentException("name, email, password, or role cannot be null");
+        }
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME
+                + "SET " + NAME_COL + " = " + user.getName()
+                + ", " + ROLE_COL + " = " + user.getRole()
+                + ", " + PHOTO_COL + " = " + user.getProfilePhoto()
+                + ", " + ORGANIZATION_COL + " = " + user.getOrganizationName()
+                + ", " + CONTACT_COL + " = " + user.getContactInfo();
+
+        //check if password is changed and generate new salt and hash if it does
+        if(!validateUser(user.getEmail(), user.getPassword())){
+            String salt = PasswordHandler.getNewSalt();
+            String hash = PasswordHandler.hash(user.getPassword(), salt);
+            query += ", " + PASSWORD_SALT_COL + " = " + salt
+             + ", " + PASSWORD_HASH_COL + " = " + hash;
+        }
+        query += " WHERE " + EMAIL_COL + " = " + user.getEmail() + ";";
+
+        db.execSQL(query);
+        db.close();
+    }
     public boolean validateUser(String email, String password){
-        User user = getUser(email);
-        String salt = user.getSalt();
-        String hash = user.getHash();
+        UserHashed userHashed = getUser(email);
+        String salt = userHashed.getSalt();
+        String hash = userHashed.getHash();
         return PasswordHandler.validatePassword(password, salt, hash);
     }
     @Override
