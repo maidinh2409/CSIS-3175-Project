@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * A database handler class used to create and manage a database of user which extends SQLiteOpenHelper.
  */
 public class UserDBHandler extends SQLiteOpenHelper {
-    private static final String DB_NAME = "userdb";
+    private static final String DB_NAME = "user.db";
     private static final int DB_VERSION = 1;
     private static final String TABLE_NAME = "user_table";
     private static final String ID_COL = "user_id";
@@ -57,8 +57,10 @@ public class UserDBHandler extends SQLiteOpenHelper {
      * Adds a user to the database.
      * @param user a User object containing the user details. Name, email, password and role are mandatory,
      *             while photo, organization and contact are optional (in which case they're null)
+     * @return true if successful and false if fail
+     * @throws IllegalArgumentException if the name, email, password, or role value of the User is null
      */
-    public void addNewUser(User user){
+    public boolean addNewUser(User user){
         if(user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getRole() == null){
             throw new IllegalArgumentException("name, email, password, or role cannot be null");
         }
@@ -77,8 +79,10 @@ public class UserDBHandler extends SQLiteOpenHelper {
         values.put(ORGANIZATION_COL, user.getOrganizationName());
         values.put(CONTACT_COL, user.getContactInfo());
 
-        db.insert(TABLE_NAME, null, values);
+        long r = db.insert(TABLE_NAME, null, values);
         db.close();
+        if(r>0) return true;
+        return false;
     }
 
     /**
@@ -87,52 +91,75 @@ public class UserDBHandler extends SQLiteOpenHelper {
      */
     public ArrayList<UserHashed> getAllUsers(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
         ArrayList<UserHashed> userHashedArray = new ArrayList<>();
 
-        if(cursorCourses.moveToFirst()){
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
             do{
                 userHashedArray.add(new UserHashed(
-                        cursorCourses.getString(1),
-                        cursorCourses.getString(2),
-                        cursorCourses.getString(3),
-                        cursorCourses.getString(4),
-                        cursorCourses.getString(5),
-                        cursorCourses.getString(6),
-                        cursorCourses.getString(7),
-                        cursorCourses.getString(8),
-                        cursorCourses.getInt(0)
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getString(7),
+                        cursor.getString(8),
+                        cursor.getInt(0)
                 ));
-            } while (cursorCourses.moveToNext());
+            } while (cursor.moveToNext());
         }
-        cursorCourses.close();
+        cursor.close();
         return userHashedArray;
     }
 
     /**
      * Fetches a user from the database based on their email.
      * @param email the user's email
-     * @return a UserHashed object containing the details of the fetched user.
+     * @return a UserHashed object containing the details of the fetched user or null if none is found.
      */
     public UserHashed getUserFromEmail(String email){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " +  EMAIL_COL + " ='" + email + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " +  EMAIL_COL + "=?", new String[]{email});
         UserHashed userHashed = null;
 
-        cursorCourses.moveToFirst();
-        userHashed = new UserHashed(
-                cursorCourses.getString(1),
-                cursorCourses.getString(2),
-                cursorCourses.getString(3),
-                cursorCourses.getString(4),
-                cursorCourses.getString(5),
-                cursorCourses.getString(6),
-                cursorCourses.getString(7),
-                cursorCourses.getString(8),
-                cursorCourses.getInt(0)
-        );
-        cursorCourses.close();
+        if(cursor.getCount()>0) {
+            cursor.moveToFirst();
+            userHashed = new UserHashed(
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(5),
+                    cursor.getString(6),
+                    cursor.getString(7),
+                    cursor.getString(8),
+                    cursor.getInt(0)
+            );
+        }
+        cursor.close();
         return userHashed;
+    }
+
+    /**
+     * Returns true if a user with the specified email exists in the database and false if not
+     * @param email the email of the user
+     * @return true if a user with said email exists in the database, false if not
+     */
+    public boolean userExists(String email){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " +  EMAIL_COL + "=?", new String[]{email});
+        boolean exists;
+
+        if(cursor.getCount()>0) {
+            exists = true;
+        }
+        else{
+            exists = false;
+        }
+        cursor.close();
+        return exists;
     }
 
     /**
@@ -142,58 +169,87 @@ public class UserDBHandler extends SQLiteOpenHelper {
      */
     public UserHashed getUserFromId(int id){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursorCourses = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " +  ID_COL + " ='" + id + "'", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " +  ID_COL + "=?", new String[]{Integer.toString(id)});
         UserHashed userHashed = null;
 
-        cursorCourses.moveToFirst();
-        userHashed = new UserHashed(
-                cursorCourses.getString(1),
-                cursorCourses.getString(2),
-                cursorCourses.getString(3),
-                cursorCourses.getString(4),
-                cursorCourses.getString(5),
-                cursorCourses.getString(6),
-                cursorCourses.getString(7),
-                cursorCourses.getString(8),
-                cursorCourses.getInt(0)
-        );
-        cursorCourses.close();
+        if(cursor.getCount()>0) {
+            cursor.moveToFirst();
+            userHashed = new UserHashed(
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(5),
+                    cursor.getString(6),
+                    cursor.getString(7),
+                    cursor.getString(8),
+                    cursor.getInt(0)
+            );
+        }
+        cursor.close();
         return userHashed;
     }
 
     /**
-     * Replaces ALL the values in the database of the specified email with the values included in
-     * the User object received. This means if there is a value(s) that you do not with to update,
-     * the User object should contain the same value as the existing one.
-     * If the User contains a different password from the existing one (checked using validateUser)
-     * then this method will generate a new salt and hash.
-     * Cannot update the email value as the email value is the value used to locate the entry in
-     * the database to update the other values.
+     * Replaces the value of the designated email with the values in the User parameter.
+     * Any parameter that is not null will replace an existing value with a new one.
+     * The email value is what's used to locate the row and thus cannot be changed by this method.
+     * This method also cannot change the password.
      * @param user a User object containing the updated values.
+     * @return true if successful and false if not
+     * @throws IllegalArgumentException if the email value of the User object is null
      */
-    public void updateUser(User user){
-        if(user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getRole() == null){
-            throw new IllegalArgumentException("name, email, password, or role cannot be null");
+    public boolean updateUser(User user){
+        if(user.getEmail() == null || userExists(user.getEmail())){
+            throw new IllegalArgumentException("User with that email cannot be found");
         }
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "UPDATE " + TABLE_NAME
-                + "SET " + NAME_COL + " = " + user.getName()
-                + ", " + ROLE_COL + " = " + user.getRole()
-                + ", " + PHOTO_COL + " = " + user.getProfilePhoto()
-                + ", " + ORGANIZATION_COL + " = " + user.getOrganizationName()
-                + ", " + CONTACT_COL + " = " + user.getContactInfo();
+        ContentValues values = new ContentValues();
 
-        //check if password is changed and generate new salt and hash if it does
-        if(!validateUser(user.getEmail(), user.getPassword())){
-            String salt = PasswordHandler.getNewSalt();
-            String hash = PasswordHandler.hash(user.getPassword(), salt);
-            query += ", " + PASSWORD_SALT_COL + " = " + salt
-             + ", " + PASSWORD_HASH_COL + " = " + hash;
+        if(user.getName() != null){
+            values.put(NAME_COL, user.getName());
         }
-        query += " WHERE " + EMAIL_COL + " = " + user.getEmail() + ";";
+        if(user.getRole() != null){
+            values.put(ROLE_COL, user.getRole());
+        }
+        if(user.getProfilePhoto() != null){
+            values.put(PHOTO_COL, user.getProfilePhoto());
+        }
+        if(user.getOrganizationName() != null){
+            values.put(ORGANIZATION_COL, user.getOrganizationName());
+        }
+        if(iser.getContactInfo() != null){
+            values.put(CONTACT_COL, user.getContactInfo());
+        }
 
-        db.execSQL(query);
+        long r = db.update(TABLE_NAME, values, EMAIL_COL+"=?", new String[]{user.getEmail()})
         db.close();
+        if(r>0) return true;
+        return false;
+    }
+
+    /**
+     * Generates a new salt and hash based on the given password which then replaces the existing
+     * salt and hash of the user with the given email.
+     * @param email the email of the user whose password will be changed
+     * @param password the new password
+     * @return true if successful and false if unsuccessful or if a user with the given email cannot be found in the database
+     */
+    public boolean updateUserPassword(String email, String password){
+        if(!userExists(email)){
+            return false;
+        }
+        String salt = PasswordHandler.getNewSalt();
+        String hash = PasswordHandler.hash(password, salt);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(PASSWORD_SALT_COL, salt);
+        values.put(PASSWORD_HASH_COL, hash);
+        long r = db.update(TABLE_NAME, values, EMAIL_COL+"=?", new String[]{email})
+        db.close();
+        if(r>0) return true;
+        return false;
     }
 
     /**
