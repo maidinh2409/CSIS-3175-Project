@@ -44,7 +44,7 @@ public class PasswordHandler {
         byte[] expectedHashBytes = expectedHash.getBytes();
         byte[] passwordHash = hash(password, salt).getBytes();
         Arrays.fill(passwordChar, Character.MIN_VALUE);
-        if (passwordHash.length != expectedHash.length){
+        if (passwordHash.length != expectedHash.getBytes().length){
             return false;
         }
         for (int i=0; i<passwordHash.length; i++){
