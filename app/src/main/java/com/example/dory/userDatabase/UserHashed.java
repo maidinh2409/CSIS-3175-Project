@@ -1,5 +1,10 @@
 package com.example.dory.userDatabase;
 
+/**
+ * A class to create User objects, differs from the User class in that this one does not have a
+ * password value but instead a salt and a hash value and also a user_id value. This class is meant
+ * to contain values obtained by the database, not meant to be created with user inputted values.
+ */
 public class UserHashed {
     private String name;
     private String email;
@@ -11,6 +16,30 @@ public class UserHashed {
     private String contactInfo;
     private int user_id;
 
+    /**
+     * Constructor to create a UserHashed object. Again, this is meant to receive values retrieved
+     * from the database, not values obtained from a user's input.
+     * @param name the user's name
+     * @param email the user's email
+     * @param salt the user's salt
+     * @param hash the user's password hashed with the salt
+     * @param role the user's role (organizer or attendee)
+     * @param photo the user's profile photo (can be null)
+     * @param organizationName the user's organization name (can be null)
+     * @param contactInfo the user's contact info (can be null)
+     * @param user_id the user's id
+     */
+    public UserHashed(String name, String email, String salt, String hash, String role, String photo, String organizationName, String contactInfo, int user_id){
+        this.name = name;
+        this.email = email;
+        this.salt = salt;
+        this.hash = hash;
+        this.role = role;
+        this.profilePhoto = photo;
+        this.organizationName = organizationName;
+        this.contactInfo = contactInfo;
+        this.user_id = user_id;
+    }
     public int getUser_id() {
         return user_id;
     }
@@ -81,35 +110,5 @@ public class UserHashed {
 
     public void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo;
-    }
-
-    public UserHashed(String name, String email, String salt, String hash, String role){
-        this.name = name;
-        this.email = email;
-        this.salt = salt;
-        this.hash = hash;
-        this.role = role;
-    }
-    public UserHashed(String name, String email, String salt, String hash, String role, String photo, String organizationName, String contactInfo){
-        this.name = name;
-        this.email = email;
-        this.salt = salt;
-        this.hash = hash;
-        this.role = role;
-        this.profilePhoto = photo;
-        this.organizationName = organizationName;
-        this.contactInfo = contactInfo;
-    }
-
-    public UserHashed(String name, String email, String salt, String hash, String role, String photo, String organizationName, String contactInfo, int user_id){
-        this.name = name;
-        this.email = email;
-        this.salt = salt;
-        this.hash = hash;
-        this.role = role;
-        this.profilePhoto = photo;
-        this.organizationName = organizationName;
-        this.contactInfo = contactInfo;
-        this.user_id = user_id;
     }
 }

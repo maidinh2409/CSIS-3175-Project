@@ -1,5 +1,9 @@
 package com.example.dory.userDatabase;
 
+/**
+ * A class to create User objects which are used by UserDBHandler to add or update users.
+ * No methods besides constructors, getters and setters;
+ */
 public class User {
     private String name;
     private String email;
@@ -8,14 +12,52 @@ public class User {
     private String profilePhoto;
     private String organizationName;
     private String contactInfo;
-    private int user_id;
 
-    public int getUser_id() {
-        return user_id;
+    /**
+     * Creates a User object with a name, email, password, and role. The photo, organization name, and contact info are optional.
+     * @param name the user's name
+     * @param email the user's email
+     * @param password the user's password
+     * @param role the user's role (attendee or organizer)
+     * @param photo (optional) the user's profile photo
+     * @param organizationName (optional) the user's organization name
+     * @param contactInfo (optional) the user's contact info
+     */
+    public User(String name, String email, String password, String role, String photo, String organizationName, String contactInfo){
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.profilePhoto = photo;
+        this.organizationName = organizationName;
+        this.contactInfo = contactInfo;
     }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public User(String name, String email, String password, String role, String photo, String organizationName){
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.profilePhoto = photo;
+        this.organizationName = organizationName;
+        this.contactInfo = null;
+    }
+    public User(String name, String email, String password, String role, String photo){
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.profilePhoto = photo;
+        this.organizationName = null;
+        this.contactInfo = null;
+    }
+    public User(String name, String email, String password, String role){
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.profilePhoto = null;
+        this.organizationName = null;
+        this.contactInfo = null;
     }
 
     public String getName() {
@@ -71,43 +113,6 @@ public class User {
     }
 
     public void setContactInfo(String contactInfo) {
-        this.contactInfo = contactInfo;
-    }
-
-    public User(String name, String email, String password, String role){
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.profilePhoto = null;
-        this.organizationName = organizationName;
-        this.contactInfo = contactInfo;
-    }
-    public User(String name, String email, String password, String role, String photo){
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.profilePhoto = photo;
-        this.organizationName = null;
-        this.contactInfo = null;
-    }
-    public User(String name, String email, String password, String role, String photo, String organizationName){
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.profilePhoto = photo;
-        this.organizationName = organizationName;
-        this.contactInfo = null;
-    }
-    public User(String name, String email, String password, String role, String photo, String organizationName, String contactInfo){
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.profilePhoto = photo;
-        this.organizationName = organizationName;
         this.contactInfo = contactInfo;
     }
 }
