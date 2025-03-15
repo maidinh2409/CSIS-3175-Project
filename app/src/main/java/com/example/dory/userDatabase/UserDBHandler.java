@@ -218,11 +218,11 @@ public class UserDBHandler extends SQLiteOpenHelper {
         if(user.getOrganizationName() != null){
             values.put(ORGANIZATION_COL, user.getOrganizationName());
         }
-        if(iser.getContactInfo() != null){
+        if(user.getContactInfo() != null){
             values.put(CONTACT_COL, user.getContactInfo());
         }
 
-        long r = db.update(TABLE_NAME, values, EMAIL_COL+"=?", new String[]{user.getEmail()})
+        long r = db.update(TABLE_NAME, values, EMAIL_COL+"=?", new String[]{user.getEmail()});
         db.close();
         if(r>0) return true;
         return false;
@@ -246,7 +246,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(PASSWORD_SALT_COL, salt);
         values.put(PASSWORD_HASH_COL, hash);
-        long r = db.update(TABLE_NAME, values, EMAIL_COL+"=?", new String[]{email})
+        long r = db.update(TABLE_NAME, values, EMAIL_COL+"=?", new String[]{email});
         db.close();
         if(r>0) return true;
         return false;
