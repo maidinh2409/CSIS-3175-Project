@@ -1,8 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Dory" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Dory" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
+        <!--        <item name="android:windowTranslucentStatus">true</item>-->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
@@ -14,7 +18,7 @@
         <item name="colorOnSecondary">@color/colorSurface</item>
 
         <!-- Status bar color -->
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <!--        <item name="android:statusBarColor">@color/colorPrimaryDark</item>-->
 
         <!-- Background colors -->
         <item name="android:windowBackground">@color/colorBackground</item>
