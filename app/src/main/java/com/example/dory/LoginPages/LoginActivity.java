@@ -1,5 +1,4 @@
 package com.example.dory.LoginPages;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -23,24 +22,20 @@ public class LoginActivity extends AppCompatActivity {
     ImageView logo;
     UserDBHandler dbHelper;
     Button continueBtn;
-    TextView forgotPassword;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        email = findViewById(R.id.editEmailLogin);
-        password = findViewById(R.id.editPasswordLogin);
+        email = findViewById(R.id.editName);
+        password = findViewById(R.id.editPassword1);
 
         registerHere = findViewById(R.id.loginNow);
         logo = findViewById(R.id.imageView2);
 
-        continueBtn = findViewById(R.id.continueBtn2);
-
-        forgotPassword = findViewById(R.id.forgotPassword);
+        continueBtn = findViewById(R.id.continueBtn);
 
 
         dbHelper = new UserDBHandler(LoginActivity.this);
@@ -68,14 +63,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        forgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, UpdatePassword.class);
-                startActivity(intent);
-            }
-        });
-
 
     }
 
@@ -89,20 +76,14 @@ public class LoginActivity extends AppCompatActivity {
             // Fetch user from the database
             UserHashed loggedInUser = dbHelper.getUserFromEmail(emailTxt);
 
-            // Check if the user was found
-            if (loggedInUser != null) {
-                // Display a welcome message
-                Toast.makeText(LoginActivity.this, "Welcome, " + loggedInUser.getName(), Toast.LENGTH_SHORT).show();
+            // Display a welcome message
+            Toast.makeText(LoginActivity.this, "Welcome, " + loggedInUser.getName(), Toast.LENGTH_SHORT).show();
 
-                // Redirect to Home Activity and pass user data
-                Intent intent = new Intent(LoginActivity.this, Home.class);
-                intent.putExtra("user_name", loggedInUser.getName());
-                intent.putExtra("user_role", loggedInUser.getRole());
-                startActivity(intent);
-            } else {
-                // Show error if user data could not be retrieved
-                Toast.makeText(LoginActivity.this, "Error fetching user data", Toast.LENGTH_SHORT).show();
-            }
+            // Redirect to Home Activity and pass user data
+            Intent intent = new Intent(LoginActivity.this, Home.class);
+            intent.putExtra("user_name", loggedInUser.getName());
+            intent.putExtra("user_role", loggedInUser.getRole());
+            startActivity(intent);
         } else {
             // Show error if user credentials are invalid
             Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
