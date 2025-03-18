@@ -124,7 +124,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " +  EMAIL_COL + "=?", new String[]{email});
         UserHashed userHashed = null;
 
-        if(cursor.getCount()>0) {
+        if(cursor.getCount() > 0) {
             cursor.moveToFirst();
             userHashed = new UserHashed(
                     cursor.getString(1),
@@ -261,6 +261,10 @@ public class UserDBHandler extends SQLiteOpenHelper {
      */
     public boolean validateUser(String email, String password){
         UserHashed userHashed = getUserFromEmail(email);
+        if (userHashed == null) {
+            return false;  // User not found, invalid email
+        }
+
         String salt = userHashed.getSalt();
         String hash = userHashed.getHash();
         return PasswordHandler.validatePassword(password, salt, hash);

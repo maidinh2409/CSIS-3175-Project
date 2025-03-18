@@ -37,6 +37,12 @@
             android:name=".LoginPages.RegistrationActivity"
             android:exported="true">
         </activity>
+
+        <activity
+            android:name=".LoginPages.UpdatePassword"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>
