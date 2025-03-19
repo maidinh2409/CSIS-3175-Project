@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.dory.InApp.Home;
 import com.example.dory.MainActivity;
 import com.example.dory.R;
 import com.example.dory.userDatabase.UserDBHandler;

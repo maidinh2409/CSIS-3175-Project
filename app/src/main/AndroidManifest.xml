@@ -24,7 +24,7 @@
         </activity>
 
         <activity
-            android:name=".LoginPages.Home"
+            android:name=".InApp.Home"
             android:exported="true">
         </activity>
 

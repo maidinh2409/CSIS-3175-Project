@@ -1,4 +1,4 @@
-package com.example.dory.LoginPages;
+package com.example.dory.InApp;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
