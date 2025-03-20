@@ -2,25 +2,29 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-<!--Primary colors-->
-    <color name="colorPrimary">#A5D6E2</color>
-    <color name="colorPrimaryDark">#7EBED0</color>
-    <color name="colorPrimaryLight">#C9E6EE</color>
+    <!--Primary colors-->
+    <color name="colorPrimary">#90CAF9</color>         <!-- A bright, lively pastel blue -->
+    <color name="colorPrimaryDark">#64B5F6</color>      <!-- A deeper blue variant for contrast -->
+    <color name="colorPrimaryLight">#BBDEFB</color>     <!-- A soft, lighter blue -->
 
     <!-- Accent Colors -->
-    <color name="colorAccent">#FFB6C1</color>
-    <color name="colorSecondaryAccent">#D0E6A5</color>
-    <color name="colorTertiaryAccent">#FFDD99</color>
+    <color name="colorAccent">#F48FB1</color>           <!-- A catchy pastel pink -->
+    <color name="colorSecondaryAccent">#81C784</color>  <!-- A fresh pastel green -->
+    <color name="colorTertiaryAccent">#FFCC80</color>   <!-- A warm, inviting pastel orange -->
+
+    <color name="colorSecondary">#4F378B</color>
 
     <!-- Neutral Colors -->
-    <color name="colorBackground">#F5F8FA</color>
-    <color name="colorSurface">#FFFFFF</color>
-    <color name="colorTextPrimary">#3A464F</color>
-    <color name="colorTextSecondary">#7A8C99</color>
-    <color name="colorDivider">#E0E6EA</color>
+    <color name="colorBackground">#F5F8FA</color>       <!-- A clean, light background -->
+    <color name="colorSurface">#FFFFFF</color>          <!-- Standard white surface -->
+    <color name="colorTextPrimary">#3A464F</color>      <!-- A solid, readable dark tone -->
+    <color name="colorTextSecondary">#7A8C99</color>    <!-- A softer secondary text color -->
+    <color name="colorDivider">#E0E6EA
+    </color>          <!-- A light divider for subtle separation -->
 
     <!-- Functional Colors -->
-    <color name="colorSuccess">#B8E0D2</color>
-    <color name="colorWarning">#FFD6A5</color>
-    <color name="colorError">#F7A5A5</color>
+    <color name="colorSuccess">#C8E6C9</color>          <!-- A gentle pastel green for success messages -->
+    <color name="colorWarning">#FFECB3</color>          <!-- A light, warm warning color -->
+    <color name="colorError">#EF9A9A</color>            <!-- A soft pastel red for error states -->
+    <color name="gradientBackground">#99ffa0</color>
 </resources>

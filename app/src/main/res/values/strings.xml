@@ -2,4 +2,10 @@
     <string name="app_name">Dory</string>
     <string name="create_event_heading">Create an Event</string>
     <string name="event_name_input">Event name</string>
+    <string name="create_event_date_btn">Pick a date</string>
+    <string name="event_description_input">Event Description</string>
+    <string name="event_location_input">Enter location</string>
+    <string name="choose_invitees_btn">Choose invitees</string>
+    <string name="create_event_btn">Create</string>
+    <string name="create_event_img_desc">calendarImg</string>
 </resources>
