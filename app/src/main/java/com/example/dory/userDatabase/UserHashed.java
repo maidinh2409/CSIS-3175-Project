@@ -29,11 +29,11 @@ public class UserHashed {
      * @param contactInfo the user's contact info (can be null)
      * @param user_id the user's id
      */
-    public UserHashed(String name, String email, String salt, String hash, String role, String photo, String organizationName, String contactInfo, int user_id){
+    public UserHashed(String name, String email, String hash, String salt, String role, String photo, String organizationName, String contactInfo, int user_id){
         this.name = name;
         this.email = email;
-        this.salt = salt;
         this.hash = hash;
+        this.salt = salt;
         this.role = role;
         this.profilePhoto = photo;
         this.organizationName = organizationName;
