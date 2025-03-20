@@ -1,4 +1,4 @@
-package com.example.dory;
+package com.example.dory.events;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
+import com.example.dory.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
