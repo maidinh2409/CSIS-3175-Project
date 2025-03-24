@@ -8,4 +8,15 @@
     <string name="choose_invitees_btn">Choose invitees</string>
     <string name="create_event_btn">Create</string>
     <string name="create_event_img_desc">calendarImg</string>
+    <string name="profile_image" />
+    <string name="hint_name" />
+    <string name="default_name" />
+    <string name="hint_email" />
+    <string name="default_email" />
+    <string name="hint_password" />
+    <string name="default_password" />
+    <string name="hint_role" />
+    <string name="default_role" />
+    <string name="label">name_label\n</string>
+    <string name="profile_image_description" />
 </resources>
