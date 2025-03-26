@@ -1,5 +1,6 @@
 package com.example.dory.LoginPages;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dory.InApp.Home;
+import com.example.dory.InApp.ProfileActivity;
 import com.example.dory.MainActivity;
 import com.example.dory.R;
 import com.example.dory.userDatabase.UserDBHandler;
@@ -72,21 +74,22 @@ public class LoginActivity extends AppCompatActivity {
         String emailTxt = email.getText().toString().trim();
         String passwordTxt = password.getText().toString().trim();
 
-        // Validate email and password using the database handler
         if (dbHelper.validateUser(emailTxt, passwordTxt)) {
-            // Fetch user from the database
             UserHashed loggedInUser = dbHelper.getUserFromEmail(emailTxt);
 
-            // Display a welcome message
+            // Lưu email vào SharedPreferences
+            SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("user_email", loggedInUser.getEmail());
+            editor.apply(); // Lưu lại dữ liệu
+
             Toast.makeText(LoginActivity.this, "Welcome, " + loggedInUser.getName(), Toast.LENGTH_SHORT).show();
 
-            // Redirect to Home Activity and pass user data
-            Intent intent = new Intent(LoginActivity.this, Home.class);
-            intent.putExtra("user_name", loggedInUser.getName());
-            intent.putExtra("user_role", loggedInUser.getRole());
+            // Chuyển sang ProfileActivity
+            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
             startActivity(intent);
+            finish(); // Kết thúc LoginActivity
         } else {
-            // Show error if user credentials are invalid
             Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
         }
     }

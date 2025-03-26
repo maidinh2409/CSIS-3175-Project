@@ -196,7 +196,7 @@
         app:layout_constraintBottom_toTopOf="@+id/change_setting_btn_s"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        app:layout_constraintTop_toBottomOf="@id/change_img_btn_s"
         app:layout_constraintVertical_bias="0.687">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -248,14 +248,13 @@
         android:id="@+id/profile_img_s"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/user_name_text_layout"
+        android:src="@drawable/default_profile"
+        app:layout_constraintBottom_toTopOf="@+id/user_name_text_layout_s"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.06"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        app:layout_constraintVertical_bias="0.55"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="0.6" />
 
     <Button
         android:id="@+id/change_img_btn_s"
@@ -263,12 +262,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Edit Image"
-        app:layout_constraintBottom_toTopOf="@+id/user_name_text_layout"
+        app:layout_constraintBottom_toTopOf="@+id/user_name_text_layout_s"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.071"
+        app:layout_constraintHorizontal_bias="0.138"
         app:layout_constraintStart_toEndOf="@+id/profile_img_s"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        app:layout_constraintVertical_bias="0.581"
+        app:layout_constraintVertical_bias="0.0"
         app:strokeColor="#FFFFFF" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

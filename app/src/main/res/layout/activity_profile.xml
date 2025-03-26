@@ -19,6 +19,9 @@
         android:layout_marginHorizontal="20dp"
 
         android:layout_marginBottom="392dp"
+        android:clickable="false"
+        android:enabled="false"
+        android:focusableInTouchMode="false"
         android:hint="User name"
         app:counterEnabled="true"
         app:counterMaxLength="20"
@@ -36,6 +39,8 @@
             android:id="@+id/user_name_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="false"
+            android:enabled="false"
             android:inputType="text"
             android:textColorHint="@color/colorTextSecondary" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -64,6 +69,9 @@
             android:id="@+id/organization_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="false"
+            android:enabled="false"
+            android:focusableInTouchMode="false"
             android:inputType="text"
             android:textColorHint="@color/colorTextSecondary" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -92,6 +100,9 @@
             android:id="@+id/password_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="false"
+            android:enabled="false"
+            android:focusableInTouchMode="false"
             android:inputType="text"
             android:textColorHint="@color/colorTextSecondary" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -119,6 +130,9 @@
             android:id="@+id/email_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="false"
+            android:enabled="false"
+            android:focusableInTouchMode="false"
             android:inputType="text"
             android:textColorHint="@color/colorTextSecondary" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -147,6 +161,9 @@
             android:id="@+id/contact_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="false"
+            android:enabled="false"
+            android:focusableInTouchMode="false"
             android:inputType="text"
             android:textColorHint="@color/colorTextSecondary" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -175,6 +192,9 @@
             android:id="@+id/role_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="false"
+            android:enabled="false"
+            android:focusableInTouchMode="false"
             android:inputType="text"
             android:textColorHint="@color/colorTextSecondary" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -220,12 +240,12 @@
         android:id="@+id/profile_img"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:src="@drawable/default_profile"
         app:layout_constraintBottom_toTopOf="@+id/user_name_text_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
-        app:layout_constraintVertical_bias="0.6"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintVertical_bias="0.3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

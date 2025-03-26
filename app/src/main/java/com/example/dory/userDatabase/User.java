@@ -60,6 +60,10 @@ public class User {
         this.contactInfo = null;
     }
 
+    public User(String name){
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
