@@ -1,15 +1,21 @@
 package com.example.dory.InApp;
 
+import static com.example.dory.InApp.ProfileSetting.PROFILE_UPDATE_REQUEST_CODE;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dory.R;
@@ -21,7 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
     ImageView profileImage;
     TextView userName, userEmail, userPassword, orgName, userRole, contactInfo;
 
-    @SuppressLint("MissingInflatedId")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +82,49 @@ public class ProfileActivity extends AppCompatActivity {
         // 🟢 Xử lý khi nhấn nút chỉnh sửa profile
         changeSetting.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, ProfileSetting.class);
-            startActivity(intent);
+            startActivityForResult(intent, PROFILE_UPDATE_REQUEST_CODE);
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PROFILE_UPDATE_REQUEST_CODE && resultCode == RESULT_OK) {
+            // Gọi lại loadUserProfile() để cập nhật giao diện
+            loadUserProfile();
+        }
+    }
+
+    private void loadUserProfile() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String email = sharedPreferences.getString("user_email", null);
+
+        if (email == null) {
+            Toast.makeText(this, "User not found!", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        UserDBHandler dbHelper = new UserDBHandler(this);
+        UserHashed user = dbHelper.getUserFromEmail(email);
+
+        if (user == null) {
+            Toast.makeText(this, "User data not available!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        userName.setText(user.getName());
+        orgName.setText(user.getOrganizationName() != null ? user.getOrganizationName() : "N/A");
+        contactInfo.setText(user.getContactInfo() != null ? user.getContactInfo() : "N/A");
+
+        // Load avatar nếu có
+        String imageBase64 = user.getProfilePhoto();
+        if (imageBase64 != null && !imageBase64.isEmpty()) {
+            byte[] decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
+            Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            profileImage.setImageBitmap(decodedBitmap);
+        }
+    }
+
 }

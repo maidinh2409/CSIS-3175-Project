@@ -18,18 +18,21 @@ import com.example.dory.R;
 import com.example.dory.userDatabase.UserDBHandler;
 import com.example.dory.userDatabase.UserHashed;
 import com.example.dory.userDatabase.User;
+import com.google.android.material.appbar.MaterialToolbar;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class ProfileSetting extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
+    static final int PROFILE_UPDATE_REQUEST_CODE =1001 ;
     private UserDBHandler userDBHelper;
     private String currentUserEmail;
 
     Button updateSetting, editImage;
     ImageView profileImage;
     Uri imageUri;
-    TextView userName_s, email_s, password_s, c_password_s, orgName_s, role_s, contactInfo_s;
+    TextView userName_s, orgName_s, contactInfo_s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,30 +41,25 @@ public class ProfileSetting extends AppCompatActivity {
 
         userDBHelper = new UserDBHandler(this);
 
-        // Lấy email từ SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         currentUserEmail = sharedPreferences.getString("user_email", null);
 
         if (currentUserEmail == null) {
-            Toast.makeText(this, "Lỗi: Không tìm thấy email người dùng!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
             finish();
             return;
-        }
+        };
+        MaterialToolbar appBar = findViewById(R.id.profileSAppBar);
+        appBar.setNavigationOnClickListener(view -> finish());
 
-        // Ánh xạ UI
         updateSetting = findViewById(R.id.change_setting_btn_s);
         editImage = findViewById(R.id.change_img_btn_s);
         profileImage = findViewById(R.id.profile_img_s);
 
         userName_s = findViewById(R.id.user_name_input_s);
-        email_s = findViewById(R.id.email_input_s);
-        password_s = findViewById(R.id.password_input_s);
-        c_password_s = findViewById(R.id.c_password_input_s);
         orgName_s = findViewById(R.id.organization_input_s);
-        role_s = findViewById(R.id.role_input_s);
         contactInfo_s = findViewById(R.id.contact_input_s);
 
-        // Load thông tin user từ database
         loadUserProfile();
 
         editImage.setOnClickListener(v -> openGallery());
@@ -77,6 +75,9 @@ public class ProfileSetting extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PROFILE_UPDATE_REQUEST_CODE && resultCode == RESULT_OK) {
+            loadUserProfile(); // Gọi hàm cập nhật dữ liệu
+        }
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
@@ -85,7 +86,7 @@ public class ProfileSetting extends AppCompatActivity {
                 profileImage.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Lỗi khi xử lý ảnh!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Image not found!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -93,15 +94,12 @@ public class ProfileSetting extends AppCompatActivity {
     private void loadUserProfile() {
         UserHashed user = userDBHelper.getUserFromEmail(currentUserEmail);
         if (user == null) {
-            Toast.makeText(this, "Không tìm thấy người dùng!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "User not found!", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
         userName_s.setText(user.getName());
-        email_s.setText(user.getEmail());
-        password_s.setText("********"); // Không hiển thị password thật
         orgName_s.setText(user.getOrganizationName() != null ? user.getOrganizationName() : "N/A");
-        role_s.setText(user.getRole());
         contactInfo_s.setText(user.getContactInfo() != null ? user.getContactInfo() : "N/A");
 
         // Load avatar nếu có
@@ -116,12 +114,15 @@ public class ProfileSetting extends AppCompatActivity {
     private void updateUserProfile() {
         UserHashed hashedUser = userDBHelper.getUserFromEmail(currentUserEmail);
         if (hashedUser == null) {
-            Toast.makeText(this, "Không tìm thấy người dùng!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Not found!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         User user = new User(
-                userName_s.getText().toString()
+                userName_s.getText().toString(),
+                currentUserEmail,
+                orgName_s.getText().toString(),
+                contactInfo_s.getText().toString()
         );
 
         if (imageUri != null) {
@@ -134,27 +135,20 @@ public class ProfileSetting extends AppCompatActivity {
                 user.setProfilePhoto(encodedImage);
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Lỗi khi xử lý ảnh!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
 
-        String newPassword = password_s.getText().toString().trim();
-        String confirmPassword = c_password_s.getText().toString().trim();
-        boolean passwordUpdated = false;
-
-        if (!newPassword.isEmpty() && newPassword.equals(confirmPassword)) {
-            passwordUpdated = userDBHelper.updateUserPassword(currentUserEmail, newPassword);
-        } else if (!newPassword.isEmpty()) {
-            Toast.makeText(this, "Mật khẩu xác nhận không khớp!", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         boolean updateSuccess = userDBHelper.updateUser(user);
-        if (updateSuccess || passwordUpdated) {
-            Toast.makeText(this, "Cập nhật thành công!", Toast.LENGTH_SHORT).show();
+        if (updateSuccess) {
+            Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
+            Intent resultIntent = new Intent();
+            setResult(RESULT_OK, resultIntent); // Báo hiệu cho ProfileActivity rằng dữ liệu đã thay đổi
+            finish();
         } else {
-            Toast.makeText(this, "Cập nhật thất bại!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -49,20 +49,15 @@ public class User {
         this.profilePhoto = photo;
         this.organizationName = null;
         this.contactInfo = null;
-    }
-    public User(String name, String email, String password, String role){
+    };
+
+
+    public User (String name, String email, String organizationName, String contactInfo) {
         this.name = name;
         this.email = email;
-        this.password = password;
-        this.role = role;
-        this.profilePhoto = null;
-        this.organizationName = null;
-        this.contactInfo = null;
-    }
-
-    public User(String name){
-        this.name = name;
-    }
+        this.organizationName = organizationName;
+        this.contactInfo = contactInfo;
+    };
 
     public String getName() {
         return name;

@@ -32,13 +32,13 @@ public class RegistrationActivity extends AppCompatActivity {
 
         logo = findViewById(R.id.imageView2);
         loginNow = findViewById(R.id.loginNow);
-        registerBtn = findViewById(R.id.continueBtn);
-        nameTxt = findViewById(R.id.editName);
-        companyTxt = findViewById(R.id.editCompany);
-        roleTxt = findViewById(R.id.editRole);
-        emailTxt = findViewById(R.id.editEmail1);
-        passwordTxt = findViewById(R.id.editPassword1);
-        confirmedPassword = findViewById(R.id.editPassword2);
+        registerBtn = findViewById(R.id.register_btn);
+        nameTxt = findViewById(R.id.register_username_text_input);
+        companyTxt = findViewById(R.id.register_org_text_input);
+        roleTxt = findViewById(R.id.register_role_text_input);
+        emailTxt = findViewById(R.id.register_email_text_input);
+        passwordTxt = findViewById(R.id.register_password_text_input);
+        confirmedPassword = findViewById(R.id.register_cpassword_text_input);
 
 
 

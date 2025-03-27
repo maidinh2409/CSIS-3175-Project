@@ -260,7 +260,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
      * @return true if the email and password matches, false otherwise
      */
     public boolean validateUser(String email, String password){
-        if(email == null || !userExists(email){
+        if(email == null || !userExists(email)){
             return false;
         }
         UserHashed userHashed = getUserFromEmail(email);
