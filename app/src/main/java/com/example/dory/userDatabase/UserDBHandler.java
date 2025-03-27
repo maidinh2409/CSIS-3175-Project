@@ -62,7 +62,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
      */
     public boolean addNewUser(User user){
         if(user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getRole() == null){
-            throw new IllegalArgumentException("name, email, password, or role cannot be null");
+            return false;
         }
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -201,7 +201,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
      */
     public boolean updateUser(User user){
         if(user.getEmail() == null || !userExists(user.getEmail())){
-            throw new IllegalArgumentException("User with that email cannot be found");
+            return false;
         }
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
