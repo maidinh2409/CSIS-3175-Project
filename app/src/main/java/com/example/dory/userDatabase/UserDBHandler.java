@@ -200,7 +200,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
      * @throws IllegalArgumentException if the email value of the User object is null
      */
     public boolean updateUser(User user){
-        if(user.getEmail() == null || userExists(user.getEmail())){
+        if(user.getEmail() == null || !userExists(user.getEmail())){
             throw new IllegalArgumentException("User with that email cannot be found");
         }
         SQLiteDatabase db = this.getWritableDatabase();
