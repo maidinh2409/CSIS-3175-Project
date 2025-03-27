@@ -49,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 T2COL3 + " INTEGER," +
                 T2COL4 + " TEXT," +
                 T2COL5 + " DATETIME," + //CHECK IF DATETIME WORKS
-                T2COL6 + " DATETIME)";
+                T2COL6 + " DATETIME)"; //Use local date to convert from string and viceversa
         db.execSQL(query);
     }
     @Override
@@ -154,73 +154,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
         else
             return false;
-    }
-
-
-
-    public Cursor viewStudProv(){
-        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        String query = "select Id,FName,ProvName from StudentTable inner join ProvTable " +
-                " on StudentTable.PId = ProvTable.PId";
-        Cursor c = sqLiteDatabase.rawQuery(query,null);
-        return c;
-    }
-    public boolean addProvRecord(String prid,String pName){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(T2COL1,prid);
-        values.put(T2COL2,pName);
-        long r = sqLiteDatabase.insert(TABLE2,null,values);
-        if(r>0)
-            return true;
-        else
-            return false;
-    }
-    public boolean updateRec(int id,String cell){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(T1COL4,cell);
-        int u = sqLiteDatabase.update(TABLE1,values,"id=?",
-                new String[]{Integer.toString(id)});
-        if(u>0)
-            return true;
-        else
-            return false;
-    }
-    public boolean delRec(int id){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        /*int d = sqLiteDatabase.delete(TABLE1,"Id=?",
-                new String[]{Integer.toString(id)});
-        if(d>0)
-            return true;
-        else
-            return false;*/
-        String query = "DELETE FROM " + TABLE1 + " WHERE Id = " + id;
-        sqLiteDatabase.execSQL(query);
-        return true;
-    }
-    public Cursor viewRecord(){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE1;
-        Cursor c = sqLiteDatabase.rawQuery(query,null);
-
-//        String id = "1";
-//        String query = "SELECT * FROM " + TABLE1 + " WHERE Id =?";
-//        Cursor c = sqLiteDatabase.rawQuery(query,new String[]{id});
-        return c;
-    }
-    public boolean addRecord(String fn,String ln,String cell,String prid){
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(T1COL2,fn);
-        values.put(T1COL3,ln);
-        values.put(T1COL4,cell);
-        values.put(T1COL5,prid);
-        long r = sqLiteDatabase.insert(TABLE1,null,values);
-        if(r>0)
-            return true;
-        else
-            return false;
-
     }
 }
