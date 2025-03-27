@@ -50,7 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 T2COL3 + " INTEGER," +
                 T2COL4 + " TEXT," +
                 T2COL5 + " TEXT," + //Ask how to add datetime should be date time or keep datetime as string
-                T2COL6 + " TEXT)";
+                T2COL6 + " TEXT)"; //Local date method to convert from date to string and viceversa
         db.execSQL(query);
     }
 
