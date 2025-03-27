@@ -32,7 +32,7 @@ public class PasswordHandler {
     public static String getNewSalt(){
         byte[] salt = new byte[16];
         RANDOM.nextBytes(salt);
-        return Arrays.toString(salt);
+        return new String(salt);
     }
 
     /**
@@ -48,7 +48,7 @@ public class PasswordHandler {
         Arrays.fill(passwordChar, Character.MIN_VALUE);
         try{
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            return Arrays.toString(skf.generateSecret(spec).getEncoded());
+            return new String(skf.generateSecret(spec).getEncoded());
         }
         catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException("Error while hashing password: " + e.getMessage());

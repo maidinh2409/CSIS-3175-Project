@@ -1,5 +1,7 @@
 package com.example.dory.userDatabase;
 
+import android.net.Uri;
+
 /**
  * A class to create User objects which are used by UserDBHandler to add or update users.
  * No methods besides constructors, getters and setters;
@@ -9,7 +11,7 @@ public class User {
     private String email;
     private String password;
     private String role;
-    private String profilePhoto;
+    private Uri profilePhoto;
     private String organizationName;
     private String contactInfo;
 
@@ -23,7 +25,7 @@ public class User {
      * @param organizationName (optional) the user's organization name
      * @param contactInfo (optional) the user's contact info
      */
-    public User(String name, String email, String password, String role, String photo, String organizationName, String contactInfo){
+    public User(String name, String email, String password, String role, Uri photo, String organizationName, String contactInfo){
         this.name = name;
         this.email = email;
         this.password = password;
@@ -32,7 +34,7 @@ public class User {
         this.organizationName = organizationName;
         this.contactInfo = contactInfo;
     }
-    public User(String name, String email, String password, String role, String photo, String organizationName){
+    public User(String name, String email, String password, String role, Uri photo, String organizationName){
         this.name = name;
         this.email = email;
         this.password = password;
@@ -41,7 +43,7 @@ public class User {
         this.organizationName = organizationName;
         this.contactInfo = null;
     }
-    public User(String name, String email, String password, String role, String photo){
+    public User(String name, String email, String password, String role, Uri photo){
         this.name = name;
         this.email = email;
         this.password = password;
@@ -91,11 +93,11 @@ public class User {
         this.role = role;
     }
 
-    public String getProfilePhoto() {
+    public Uri getProfilePhoto() {
         return profilePhoto;
     }
 
-    public void setProfilePhoto(String profilePhoto) {
+    public void setProfilePhoto(Uri profilePhoto) {
         this.profilePhoto = profilePhoto;
     }
 

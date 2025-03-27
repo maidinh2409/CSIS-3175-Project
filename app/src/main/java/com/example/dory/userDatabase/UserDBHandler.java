@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 
 import java.util.ArrayList;
 
@@ -75,7 +76,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
         values.put(PASSWORD_HASH_COL, hash);
         values.put(PASSWORD_SALT_COL, salt);
         values.put(ROLE_COL, user.getRole());
-        values.put(PHOTO_COL, user.getProfilePhoto());
+        values.put(PHOTO_COL, user.getProfilePhoto().toString());
         values.put(ORGANIZATION_COL, user.getOrganizationName());
         values.put(CONTACT_COL, user.getContactInfo());
 
@@ -103,7 +104,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
                         cursor.getString(3),
                         cursor.getString(4),
                         cursor.getString(5),
-                        cursor.getString(6),
+                        Uri.parse(cursor.getString(6)),
                         cursor.getString(7),
                         cursor.getString(8),
                         cursor.getInt(0)
@@ -132,7 +133,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
                     cursor.getString(3),
                     cursor.getString(4),
                     cursor.getString(5),
-                    cursor.getString(6),
+                    Uri.parse(cursor.getString(6)),
                     cursor.getString(7),
                     cursor.getString(8),
                     cursor.getInt(0)
@@ -180,7 +181,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
                     cursor.getString(3),
                     cursor.getString(4),
                     cursor.getString(5),
-                    cursor.getString(6),
+                    Uri.parse(cursor.getString(6)),
                     cursor.getString(7),
                     cursor.getString(8),
                     cursor.getInt(0)
@@ -213,7 +214,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
             values.put(ROLE_COL, user.getRole());
         }
         if(user.getProfilePhoto() != null){
-            values.put(PHOTO_COL, user.getProfilePhoto());
+            values.put(PHOTO_COL, user.getProfilePhoto().toString());
         }
         if(user.getOrganizationName() != null){
             values.put(ORGANIZATION_COL, user.getOrganizationName());

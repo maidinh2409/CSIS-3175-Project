@@ -1,5 +1,7 @@
 package com.example.dory.userDatabase;
 
+import android.net.Uri;
+
 /**
  * A class to create User objects, differs from the User class in that this one does not have a
  * password value but instead a salt and a hash value and also a user_id value. This class is meant
@@ -11,7 +13,7 @@ public class UserHashed {
     private String salt;
     private String hash;
     private String role;
-    private String profilePhoto;
+    private Uri profilePhoto;
     private String organizationName;
     private String contactInfo;
     private int user_id;
@@ -29,7 +31,7 @@ public class UserHashed {
      * @param contactInfo the user's contact info (can be null)
      * @param user_id the user's id
      */
-    public UserHashed(String name, String email, String hash, String salt, String role, String photo, String organizationName, String contactInfo, int user_id){
+    public UserHashed(String name, String email, String hash, String salt, String role, Uri photo, String organizationName, String contactInfo, int user_id){
         this.name = name;
         this.email = email;
         this.hash = hash;
@@ -88,11 +90,11 @@ public class UserHashed {
         this.role = role;
     }
 
-    public String getProfilePhoto() {
+    public Uri getProfilePhoto() {
         return profilePhoto;
     }
 
-    public void setProfilePhoto(String profilePhoto) {
+    public void setProfilePhoto(Uri profilePhoto) {
         this.profilePhoto = profilePhoto;
     }
 
