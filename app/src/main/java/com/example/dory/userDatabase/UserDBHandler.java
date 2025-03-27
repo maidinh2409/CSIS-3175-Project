@@ -267,6 +267,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
             throw new IllegalArgumentException("User with that email cannot be found");
         }
         UserHashed userHashed = getUserFromEmail(email);
+        if(userHashed == null) return false;
         String salt = userHashed.getSalt();
         String hash = userHashed.getHash();
         return PasswordHandler.validatePassword(password, salt, hash);
