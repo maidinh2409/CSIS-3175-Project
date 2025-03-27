@@ -9,35 +9,48 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    final static String DATABASE_NAME = "StudentInfo.db";
-    final static int DATABASE_VERSION = 2;
-    final static String TABLE1 = "StudentTable";
-    final static String TABLE2 = "ProvTable";
-    final static String T2COL1 = "PId";
-    final static String T2COL2 = "ProvName";
-    final static String T1COL1 = "Id";
-    final static String T1COL2 = "FName";
-    final static String T1COL3 = "LName";
-    final static String T1COL4 = "Cell";
-    final static String T1COL5 = "PId";
+    final static String DATABASE_NAME = "UserEvents&Invitations.db";
+    final static int DATABASE_VERSION = 1;
+    final static String TABLE1 = "EVENT";
+    final static String T1COL1 = "event_id";
+    final static String T1COL2 = "organizer_id";
+    final static String T1COL3 = "title";
+    final static String T1COL4 = "description";
+    final static String T1COL5 = "startDate";
+    final static String T1COL6 = "endDate";
+    final static String T1COL7 = "location";
+    final static String T1COL8 = "capacity";
+    final static String TABLE2 = "INVITATION";
+    final static String T2COL1 = "invitation_id";
+    final static String T2COL2 = "event_id";
+    final static String T2COL3 = "attendee_id";
+    final static String T2COL4 = "status";
+    final static String T2COL5 = "creationTime";
+    final static String T2COL6 = "responseTime";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
     }
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE " + TABLE1 +
                 "(" + T1COL1 + " INTEGER PRIMARY KEY," +
-                T1COL2 + " TEXT," +
+                T1COL2 + " INTEGER," +
                 T1COL3 + " TEXT," +
                 T1COL4 + " TEXT," +
-                T1COL5 + " TEXT)";
+                T1COL5 + " TEXT," +
+                T1COL6 + " TEXT," +
+                T1COL7 + " TEXT," +
+                T1COL8 + " INTEGER)";
         db.execSQL(query);
         query = "CREATE TABLE " + TABLE2 +
-                "(" + T2COL1 + " TEXT," +
-                T2COL2 + " TEXT)";
+                "(" + T2COL1 + " INTEGER PRIMARY KEY," +
+                T2COL2 + " INTEGER," +
+                T2COL3 + " INTEGER," +
+                T2COL4 + " TEXT," +
+                T2COL5 + " TEXT," + //Ask how to add datetime should be date time or keep datetime as string
+                T2COL6 + " TEXT)";
         db.execSQL(query);
     }
 
