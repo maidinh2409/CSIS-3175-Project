@@ -120,6 +120,9 @@ public class UserDBHandler extends SQLiteOpenHelper {
      * @return a UserHashed object containing the details of the fetched user or null if none is found.
      */
     public UserHashed getUserFromEmail(String email){
+        if(email == null || !userExists(email){
+            throw new IllegalArgumentException("User with that email cannot be found");
+        }
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " +  EMAIL_COL + "=?", new String[]{email});
         UserHashed userHashed = null;
@@ -236,7 +239,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
      * @return true if successful and false if unsuccessful or if a user with the given email cannot be found in the database
      */
     public boolean updateUserPassword(String email, String password){
-        if(!userExists(email)){
+        if(email == null || !userExists(email)){
             return false;
         }
         String salt = PasswordHandler.getNewSalt();
@@ -260,6 +263,9 @@ public class UserDBHandler extends SQLiteOpenHelper {
      * @return true if the email and password matches, false otherwise
      */
     public boolean validateUser(String email, String password){
+        if(email == null || !userExists(email){
+            throw new IllegalArgumentException("User with that email cannot be found");
+        }
         UserHashed userHashed = getUserFromEmail(email);
         String salt = userHashed.getSalt();
         String hash = userHashed.getHash();
