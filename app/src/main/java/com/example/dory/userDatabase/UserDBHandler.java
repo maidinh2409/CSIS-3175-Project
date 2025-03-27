@@ -62,7 +62,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
      */
     public boolean addNewUser(User user){
         if(user.getName() == null || user.getEmail() == null || user.getPassword() == null || user.getRole() == null){
-            throw new IllegalArgumentException("name, email, password, or role cannot be null");
+            return false;
         }
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -201,7 +201,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
      */
     public boolean updateUser(User user){
         if(user.getEmail() == null || !userExists(user.getEmail())){
-            throw new IllegalArgumentException("User with that email cannot be found");
+            return false;
         }
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -236,7 +236,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
      * @return true if successful and false if unsuccessful or if a user with the given email cannot be found in the database
      */
     public boolean updateUserPassword(String email, String password){
-        if(!userExists(email)){
+        if(email == null || !userExists(email)){
             return false;
         }
         String salt = PasswordHandler.getNewSalt();
@@ -260,7 +260,11 @@ public class UserDBHandler extends SQLiteOpenHelper {
      * @return true if the email and password matches, false otherwise
      */
     public boolean validateUser(String email, String password){
+        if(email == null || !userExists(email){
+            return false;
+        }
         UserHashed userHashed = getUserFromEmail(email);
+        if(userHashed == null) return false;
         String salt = userHashed.getSalt();
         String hash = userHashed.getHash();
         return PasswordHandler.validatePassword(password, salt, hash);
