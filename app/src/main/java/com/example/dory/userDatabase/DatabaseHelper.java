@@ -48,8 +48,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 T2COL2 + " INTEGER," +
                 T2COL3 + " INTEGER," +
                 T2COL4 + " TEXT," +
-                T2COL5 + " DATETIME," + //CHECK IF DATETIME WORKS
-                T2COL6 + " DATETIME)"; //Use local date to convert from string and viceversa
+                T2COL5 + " TEXT," + //CHECK IF DATETIME WORKS
+                T2COL6 + " TEXT)"; //Use local date to convert from string and viceversa
         db.execSQL(query);
     }
     @Override
