@@ -9,7 +9,7 @@
     </style>
 
     <style name="PrimaryButtonStyle" parent="ButtonStyle">
-        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="backgroundTint">#99F5F8FA</item>
     </style>
 
     <style name="SecondaryButtonStyle" parent="ButtonStyle">
@@ -31,12 +31,21 @@
         <item name="hintTextColor">@color/black</item>
     </style>
 
+
     <!-- Card styles -->
     <style name="CardViewStyle" parent="Widget.Material3.CardView.Outlined">
         <item name="cardBackgroundColor">@color/colorSurface</item>
         <item name="cardElevation">2dp</item>
         <item name="cardCornerRadius">8dp</item>
         <item name="contentPadding">16dp</item>
+    </style>
+
+    <style name="DisabledView"
+        parent="Widget.Material3.TextInputLayout.OutlinedBox"
+        >
+        <item name="boxBackgroundColor">#A1A1AA</item>
+        <item name="android:strokeColor">@color/white</item>
+        <item name="android:textColorHint">@color/black</item>
     </style>
 
     <style name="AppBarStyle" parent="Widget.Material3.AppBarLayout">

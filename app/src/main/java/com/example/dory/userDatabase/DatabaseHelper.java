@@ -1,4 +1,4 @@
-package com.example.week10app;
+package com.example.dory.userDatabase;
 
 import android.content.ContentValues;
 import android.content.Context;

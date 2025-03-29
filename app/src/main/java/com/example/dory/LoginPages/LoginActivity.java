@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.dory.InApp.Home;
 import com.example.dory.InApp.ProfileActivity;
 import com.example.dory.MainActivity;
 import com.example.dory.R;
@@ -22,7 +21,7 @@ import com.example.dory.userDatabase.UserHashed;
 public class LoginActivity extends AppCompatActivity {
     EditText email, password;
     TextView registerHere;
-    ImageView logo;
+    TextView logo;
     UserDBHandler dbHelper;
     Button continueBtn;
 
@@ -32,13 +31,13 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        email = findViewById(R.id.editName);
-        password = findViewById(R.id.editPassword1);
+        email = findViewById(R.id.login_email_input);
+        password = findViewById(R.id.login_password_input);
 
-        registerHere = findViewById(R.id.loginNow);
-        logo = findViewById(R.id.imageView2);
+        registerHere = findViewById(R.id.registerNow);
+        logo = findViewById(R.id.app_heading);
 
-        continueBtn = findViewById(R.id.continueBtn);
+        continueBtn = findViewById(R.id.login_continue_btn);
 
 
         dbHelper = new UserDBHandler(LoginActivity.this);

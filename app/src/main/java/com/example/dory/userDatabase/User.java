@@ -21,50 +21,30 @@ public class User {
      * @param email the user's email
      * @param password the user's password
      * @param role the user's role (attendee or organizer)
-     * @param photo (optional) the user's profile photo
      * @param organizationName (optional) the user's organization name
-     * @param contactInfo (optional) the user's contact info
      */
-    public User(String name, String email, String password, String role, Uri photo, String organizationName, String contactInfo){
+
+
+
+
+    public User(String name, String email, String password, String role, String organizationName){
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
-        this.profilePhoto = photo;
+        this.organizationName = organizationName;
+        this.contactInfo = null;
+        this.profilePhoto = null;
+    };
+
+
+    public User (String name, String email, String organizationName, String contactInfo) {
+        this.name = name;
+        this.email = email;
         this.organizationName = organizationName;
         this.contactInfo = contactInfo;
-    }
-    public User(String name, String email, String password, String role, Uri photo, String organizationName){
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.profilePhoto = photo;
-        this.organizationName = organizationName;
-        this.contactInfo = null;
-    }
-    public User(String name, String email, String password, String role, Uri photo){
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.profilePhoto = photo;
-        this.organizationName = null;
-        this.contactInfo = null;
-    }
-    public User(String name, String email, String password, String role){
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
         this.profilePhoto = null;
-        this.organizationName = null;
-        this.contactInfo = null;
-    }
-
-    public User(String name){
-        this.name = name;
-    }
+    };
 
     public String getName() {
         return name;

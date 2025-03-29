@@ -1,17 +1,25 @@
 package com.example.dory.InApp;
 
+import static com.example.dory.InApp.ProfileSetting.PROFILE_UPDATE_REQUEST_CODE;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.dory.R;
 import com.example.dory.userDatabase.UserDBHandler;
 import com.example.dory.userDatabase.UserHashed;
@@ -21,13 +29,12 @@ public class ProfileActivity extends AppCompatActivity {
     ImageView profileImage;
     TextView userName, userEmail, userPassword, orgName, userRole, contactInfo;
 
-    @SuppressLint("MissingInflatedId")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Ánh xạ UI
         changeSetting = findViewById(R.id.change_setting_btn);
         profileImage = findViewById(R.id.profile_img);
         userName = findViewById(R.id.user_name_input);
@@ -37,7 +44,6 @@ public class ProfileActivity extends AppCompatActivity {
         userRole = findViewById(R.id.role_input);
         contactInfo = findViewById(R.id.contact_input);
 
-        // 🟢 Lấy email từ SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String email = sharedPreferences.getString("user_email", null);
 
@@ -47,7 +53,6 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // 🟢 Lấy thông tin từ database
         UserDBHandler dbHelper = new UserDBHandler(this);
         UserHashed user = dbHelper.getUserFromEmail(email);
 
@@ -57,26 +62,96 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // 🟢 Hiển thị thông tin user
         userName.setText(user.getName());
         userEmail.setText(user.getEmail());
-        userPassword.setText("********"); // Không hiển thị password thật
+        userPassword.setText("********");
         orgName.setText(user.getOrganizationName() != null ? user.getOrganizationName() : "N/A");
         userRole.setText(user.getRole());
         contactInfo.setText(user.getContactInfo() != null ? user.getContactInfo() : "N/A");
 
-        // 🟢 Nếu có ảnh đại diện, cập nhật ImageView
-        if (user.getProfilePhoto() != null && !user.getProfilePhoto().isEmpty()) {
-            int imageResource = getResources().getIdentifier(user.getProfilePhoto(), "drawable", getPackageName());
-            if (imageResource != 0) {
-                profileImage.setImageResource(imageResource);
+        // 🟢 Kiểm tra ảnh profile và hiển thị
+        if (user.getProfilePhoto() != null) {
+            String profilePhoto = String.valueOf(user.getProfilePhoto());
+
+            if (profilePhoto.startsWith("content://") || profilePhoto.startsWith("file://")) {
+                // Trường hợp URI ảnh
+                Uri imageUri = Uri.parse(profilePhoto);
+                Glide.with(this).load(imageUri).into(profileImage);
+            } else {
+                // Trường hợp Base64
+                try {
+                    byte[] decodedBytes = Base64.decode(profilePhoto, Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                    profileImage.setImageBitmap(bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Error loading profile image!", Toast.LENGTH_SHORT).show();
+                }
             }
+        } else {
+            // Nếu không có ảnh, đặt ảnh mặc định
+            profileImage.setImageResource(R.drawable.default_profile);
         }
 
         // 🟢 Xử lý khi nhấn nút chỉnh sửa profile
         changeSetting.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, ProfileSetting.class);
-            startActivity(intent);
+            startActivityForResult(intent, PROFILE_UPDATE_REQUEST_CODE);
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PROFILE_UPDATE_REQUEST_CODE && resultCode == RESULT_OK) {
+            // Gọi lại loadUserProfile() để cập nhật giao diện
+            loadUserProfile();
+        }
+    }
+
+    private void loadUserProfile() {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String email = sharedPreferences.getString("user_email", null);
+
+        if (email == null) {
+            Toast.makeText(this, "User not found!", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        UserDBHandler dbHelper = new UserDBHandler(this);
+        UserHashed user = dbHelper.getUserFromEmail(email);
+
+        if (user == null) {
+            Toast.makeText(this, "User data not available!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        userName.setText(user.getName());
+        orgName.setText(user.getOrganizationName() != null ? user.getOrganizationName() : "N/A");
+        contactInfo.setText(user.getContactInfo() != null ? user.getContactInfo() : "N/A");
+
+        // 🟢 Update ảnh đại diện
+        String profilePhoto = String.valueOf(user.getProfilePhoto());
+        if (profilePhoto != null && !profilePhoto.isEmpty()) {
+            if (profilePhoto.startsWith("content://") || profilePhoto.startsWith("file://")) {
+                Glide.with(this).load(Uri.parse(profilePhoto)).into(profileImage);
+            } else {
+                try {
+                    byte[] decodedBytes = Base64.decode(profilePhoto, Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                    profileImage.setImageBitmap(bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Error loading profile image!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            profileImage.setImageResource(R.drawable.default_profile);
+        }
+    }
+
+
+
 }
