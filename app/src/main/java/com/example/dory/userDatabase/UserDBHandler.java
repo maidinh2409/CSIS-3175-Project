@@ -76,7 +76,12 @@ public class UserDBHandler extends SQLiteOpenHelper {
         values.put(PASSWORD_HASH_COL, hash);
         values.put(PASSWORD_SALT_COL, salt);
         values.put(ROLE_COL, user.getRole());
-        values.put(PHOTO_COL, user.getProfilePhoto().toString());
+        if(user.getProfilePhoto() == null){
+            values.put(PHOTO_COL, (String) null);
+        }
+        else{
+            values.put(PHOTO_COL, user.getProfilePhoto().toString());
+        }
         values.put(ORGANIZATION_COL, user.getOrganizationName());
         values.put(CONTACT_COL, user.getContactInfo());
 
@@ -98,17 +103,32 @@ public class UserDBHandler extends SQLiteOpenHelper {
         if(cursor.getCount() > 0){
             cursor.moveToFirst();
             do{
-                userHashedArray.add(new UserHashed(
-                        cursor.getString(1),
-                        cursor.getString(2),
-                        cursor.getString(3),
-                        cursor.getString(4),
-                        cursor.getString(5),
-                        Uri.parse(cursor.getString(6)),
-                        cursor.getString(7),
-                        cursor.getString(8),
-                        cursor.getInt(0)
-                ));
+                if(cursor.getString(6) == null){
+                    userHashedArray.add(new UserHashed(
+                            cursor.getString(1),
+                            cursor.getString(2),
+                            cursor.getString(3),
+                            cursor.getString(4),
+                            cursor.getString(5),
+                            null,
+                            cursor.getString(7),
+                            cursor.getString(8),
+                            cursor.getInt(0))
+                    );
+                }
+                else {
+                    userHashedArray.add(new UserHashed(
+                            cursor.getString(1),
+                            cursor.getString(2),
+                            cursor.getString(3),
+                            cursor.getString(4),
+                            cursor.getString(5),
+                            Uri.parse(cursor.getString(6)),
+                            cursor.getString(7),
+                            cursor.getString(8),
+                            cursor.getInt(0))
+                    );
+                }
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -127,17 +147,32 @@ public class UserDBHandler extends SQLiteOpenHelper {
 
         if(cursor.getCount()>0) {
             cursor.moveToFirst();
-            userHashed = new UserHashed(
-                    cursor.getString(1),
-                    cursor.getString(2),
-                    cursor.getString(3),
-                    cursor.getString(4),
-                    cursor.getString(5),
-                    Uri.parse(cursor.getString(6)),
-                    cursor.getString(7),
-                    cursor.getString(8),
-                    cursor.getInt(0)
-            );
+            if(cursor.getString(6) == null){
+                userHashed = new UserHashed(
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        null,
+                        cursor.getString(7),
+                        cursor.getString(8),
+                        cursor.getInt(0)
+                );
+            }
+            else {
+                userHashed = new UserHashed(
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        Uri.parse(cursor.getString(6)),
+                        cursor.getString(7),
+                        cursor.getString(8),
+                        cursor.getInt(0)
+                );
+            }
         }
         cursor.close();
         return userHashed;
@@ -175,17 +210,32 @@ public class UserDBHandler extends SQLiteOpenHelper {
 
         if(cursor.getCount()>0) {
             cursor.moveToFirst();
-            userHashed = new UserHashed(
-                    cursor.getString(1),
-                    cursor.getString(2),
-                    cursor.getString(3),
-                    cursor.getString(4),
-                    cursor.getString(5),
-                    Uri.parse(cursor.getString(6)),
-                    cursor.getString(7),
-                    cursor.getString(8),
-                    cursor.getInt(0)
-            );
+            if(cursor.getString(6) == null){
+                userHashed = new UserHashed(
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        null,
+                        cursor.getString(7),
+                        cursor.getString(8),
+                        cursor.getInt(0)
+                );
+            }
+            else {
+                userHashed = new UserHashed(
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        Uri.parse(cursor.getString(6)),
+                        cursor.getString(7),
+                        cursor.getString(8),
+                        cursor.getInt(0)
+                );
+            }
         }
         cursor.close();
         return userHashed;
