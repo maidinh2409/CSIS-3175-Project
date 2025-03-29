@@ -147,12 +147,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         else
             return false;
     }
-    public Cursor viewInvitationsForAttendeeID(String atteID) {
+    public ArrayList<Invitation> viewInvitationsForAttendeeID(String atteID) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        String query = "SELECT invitation_id, event_id, status, creationTime, responseTime FROM INVITATION" +
-                " WHERE INVITATION.attendee_id = " + atteID;
-        Cursor c = sqLiteDatabase.rawQuery(query,null);
-        return c;
+        ArrayList<Invitation> InvitationArray = new ArrayList<>();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE2, null);
+
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
+            do{
+                InvitationArray.add(new Invitation(
+                        cursor.getInt(1),
+                        cursor.getInt(2),
+                        cursor.getInt(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6))
+                );
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return InvitationArray;
+
+//        String query = "SELECT invitation_id, event_id, status, creationTime, responseTime FROM INVITATION" +
+//                " WHERE INVITATION.attendee_id = " + atteID;
+//        Cursor c = sqLiteDatabase.rawQuery(query,null);
+//        return c;
     }
     public boolean updateInvitation(int invID, int eveID, int atteID, String status, String creaTime, String respTime) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
