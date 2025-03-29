@@ -1,7 +1,9 @@
 package com.example.dory.InApp;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -14,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.example.dory.R;
 import com.example.dory.userDatabase.UserDBHandler;
 import com.example.dory.userDatabase.UserHashed;
@@ -67,6 +72,7 @@ public class ProfileSetting extends AppCompatActivity {
         updateSetting.setOnClickListener(v -> updateUserProfile());
     }
 
+
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
@@ -76,16 +82,19 @@ public class ProfileSetting extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == PROFILE_UPDATE_REQUEST_CODE && resultCode == RESULT_OK) {
             loadUserProfile(); // Reload user profile data after updating
         }
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData(); // Lưu URI của ảnh
-
-            // Hiển thị ảnh ngay lập tức
-            profileImage.setImageURI(imageUri);
+            imageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                profileImage.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Image not found!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -140,22 +149,6 @@ public class ProfileSetting extends AppCompatActivity {
         if (imageUri != null) {
             String imagePath = imageUri.toString(); // Lưu URI dạng chuỗi vào database
             user.setProfilePhoto(Uri.parse(imagePath));
-
-            // Nếu muốn lưu Base64 thay vì URI, hãy dùng đoạn này:
-        /*
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-            String encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
-            user.setProfilePhoto(encodedImage); // Lưu Base64 vào DB
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Error encoding image!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        */
         }
 
         boolean updateSuccess = userDBHelper.updateUser(user);

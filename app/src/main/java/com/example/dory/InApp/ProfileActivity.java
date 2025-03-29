@@ -28,6 +28,14 @@ public class ProfileActivity extends AppCompatActivity {
     Button changeSetting;
     ImageView profileImage;
     TextView userName, userEmail, userPassword, orgName, userRole, contactInfo;
+    private static final int PICK_IMAGE_REQUEST = 1;
+
+    public void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("image/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
 
 
     @Override
@@ -69,16 +77,16 @@ public class ProfileActivity extends AppCompatActivity {
         userRole.setText(user.getRole());
         contactInfo.setText(user.getContactInfo() != null ? user.getContactInfo() : "N/A");
 
-        // 🟢 Kiểm tra ảnh profile và hiển thị
+
         if (user.getProfilePhoto() != null) {
             String profilePhoto = String.valueOf(user.getProfilePhoto());
 
             if (profilePhoto.startsWith("content://") || profilePhoto.startsWith("file://")) {
-                // Trường hợp URI ảnh
+
                 Uri imageUri = Uri.parse(profilePhoto);
                 Glide.with(this).load(imageUri).into(profileImage);
             } else {
-                // Trường hợp Base64
+
                 try {
                     byte[] decodedBytes = Base64.decode(profilePhoto, Base64.DEFAULT);
                     Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
@@ -89,11 +97,11 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         } else {
-            // Nếu không có ảnh, đặt ảnh mặc định
+
             profileImage.setImageResource(R.drawable.default_profile);
         }
 
-        // 🟢 Xử lý khi nhấn nút chỉnh sửa profile
+
         changeSetting.setOnClickListener(v -> {
             Intent intent = new Intent(ProfileActivity.this, ProfileSetting.class);
             startActivityForResult(intent, PROFILE_UPDATE_REQUEST_CODE);
@@ -105,7 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PROFILE_UPDATE_REQUEST_CODE && resultCode == RESULT_OK) {
-            // Gọi lại loadUserProfile() để cập nhật giao diện
+
             loadUserProfile();
         }
     }
