@@ -25,7 +25,7 @@ import java.io.IOException;
 
 public class ProfileSetting extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
-    static final int PROFILE_UPDATE_REQUEST_CODE =1001 ;
+    static final int PROFILE_UPDATE_REQUEST_CODE = 1001;
     private UserDBHandler userDBHelper;
     private String currentUserEmail;
 
@@ -48,7 +48,8 @@ public class ProfileSetting extends AppCompatActivity {
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
             finish();
             return;
-        };
+        }
+
         MaterialToolbar appBar = findViewById(R.id.profileSAppBar);
         appBar.setNavigationOnClickListener(view -> finish());
 
@@ -75,19 +76,16 @@ public class ProfileSetting extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == PROFILE_UPDATE_REQUEST_CODE && resultCode == RESULT_OK) {
-            loadUserProfile(); // Gọi hàm cập nhật dữ liệu
+            loadUserProfile(); // Reload user profile data after updating
         }
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            imageUri = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                profileImage.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Image not found!", Toast.LENGTH_SHORT).show();
-            }
+            imageUri = data.getData(); // Lưu URI của ảnh
+
+            // Hiển thị ảnh ngay lập tức
+            profileImage.setImageURI(imageUri);
         }
     }
 
@@ -98,23 +96,37 @@ public class ProfileSetting extends AppCompatActivity {
             finish();
             return;
         }
+
         userName_s.setText(user.getName());
         orgName_s.setText(user.getOrganizationName() != null ? user.getOrganizationName() : "N/A");
         contactInfo_s.setText(user.getContactInfo() != null ? user.getContactInfo() : "N/A");
 
-        // Load avatar nếu có
-        String imageBase64 = user.getProfilePhoto();
-        if (imageBase64 != null && !imageBase64.isEmpty()) {
-            byte[] decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
-            Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            profileImage.setImageBitmap(decodedBitmap);
+        // Load avatar nếu tồn tại
+        if (user.getProfilePhoto() != null) {
+            String photoString = String.valueOf(user.getProfilePhoto());
+
+            if (photoString.startsWith("content://") || photoString.startsWith("file://")) {
+                // Nếu là URI, dùng setImageURI()
+                Uri imageUri = Uri.parse(photoString);
+                profileImage.setImageURI(imageUri);
+            } else {
+                // Nếu là Base64, giải mã và hiển thị
+                try {
+                    byte[] decodedBytes = Base64.decode(photoString, Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                    profileImage.setImageBitmap(bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Error loading profile image!", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 
     private void updateUserProfile() {
         UserHashed hashedUser = userDBHelper.getUserFromEmail(currentUserEmail);
         if (hashedUser == null) {
-            Toast.makeText(this, "Not found!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "User not found!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -126,29 +138,34 @@ public class ProfileSetting extends AppCompatActivity {
         );
 
         if (imageUri != null) {
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                byte[] byteArray = byteArrayOutputStream.toByteArray();
-                String encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
-                user.setProfilePhoto(encodedImage);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
+            String imagePath = imageUri.toString(); // Lưu URI dạng chuỗi vào database
+            user.setProfilePhoto(Uri.parse(imagePath));
 
+            // Nếu muốn lưu Base64 thay vì URI, hãy dùng đoạn này:
+        /*
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            String encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            user.setProfilePhoto(encodedImage); // Lưu Base64 vào DB
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error encoding image!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        */
+        }
 
         boolean updateSuccess = userDBHelper.updateUser(user);
         if (updateSuccess) {
             Toast.makeText(this, "Success!", Toast.LENGTH_SHORT).show();
             Intent resultIntent = new Intent();
-            setResult(RESULT_OK, resultIntent); // Báo hiệu cho ProfileActivity rằng dữ liệu đã thay đổi
+            setResult(RESULT_OK, resultIntent);
             finish();
         } else {
-            Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to update!", Toast.LENGTH_SHORT).show();
         }
     }
 }

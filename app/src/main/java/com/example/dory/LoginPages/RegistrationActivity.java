@@ -3,25 +3,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.dory.MainActivity;
 import com.example.dory.R;
 import com.example.dory.userDatabase.User;
 import com.example.dory.userDatabase.UserDBHandler;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class RegistrationActivity extends AppCompatActivity {
     Button registerBtn;
     TextView loginNow;
-    ImageView logo;
-    EditText nameTxt, companyTxt, emailTxt, passwordTxt, confirmedPassword, roleTxt;
-    EditText []  fields;
+    TextInputEditText nameTxt, companyTxt, emailTxt, passwordTxt, confirmedPassword;
+    MaterialAutoCompleteTextView roleTxt;
+
+    TextInputEditText []  fields;
 
     UserDBHandler dbHelper;
     @Override
@@ -30,7 +30,6 @@ public class RegistrationActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registration);
 
-        logo = findViewById(R.id.imageView2);
         loginNow = findViewById(R.id.loginNow);
         registerBtn = findViewById(R.id.register_btn);
         nameTxt = findViewById(R.id.register_username_text_input);
@@ -42,7 +41,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
 
-        fields = new EditText[] {nameTxt, companyTxt, roleTxt, emailTxt, passwordTxt, confirmedPassword};
+        fields = new TextInputEditText[] {nameTxt, companyTxt, emailTxt, passwordTxt, confirmedPassword};
 
         dbHelper = new  UserDBHandler(RegistrationActivity.this);
 
@@ -55,53 +54,54 @@ public class RegistrationActivity extends AppCompatActivity {
         });
 
 
-
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registrationError();
-                passwordError();
-                checkEmail();
+                if (!registrationError() || !passwordError() || !checkEmail()) {
+                    return;
+                }
                 checkRegistration();
             }
         });
 
 
-
-
-        logo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
     }
 
-    private void registrationError() {
-        for (EditText field: fields) {
+    private boolean registrationError() {
+        if (roleTxt.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Role must be selected!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        for (TextInputEditText field : fields) {
             if (field.getText().toString().trim().isEmpty()) {
                 Toast.makeText(this, "All fields must be filled in!", Toast.LENGTH_SHORT).show();
+                return false;
             }
         }
+
+        return true;
     }
 
-    private void passwordError() {
+
+    private boolean passwordError() {
         String passwordVal = passwordTxt.getText().toString().trim();
         String confirmedPwVal = confirmedPassword.getText().toString().trim();
         if (!passwordVal.equals(confirmedPwVal)) {
             Toast.makeText(this, "Password doesn't match", Toast.LENGTH_SHORT).show();
+            return false;
         }
+        return true;
     }
 
-    private void checkEmail() {
+    private boolean checkEmail() {
         String emailVal = emailTxt.getText().toString().trim();
-        String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        String emailPattern = "^[^@]+@[^@]+\\.[a-zA-Z]{2,}$";
 
         if (!emailVal.matches(emailPattern)) {
-            Toast.makeText(this, "Email is invalid", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Email is invalid (must be in format xxx@xxx.xxx)", Toast.LENGTH_SHORT).show();
+            return false;
         }
+        return true;
     }
 
     private void checkRegistration() {
@@ -111,15 +111,20 @@ public class RegistrationActivity extends AppCompatActivity {
         String company = companyTxt.getText().toString().trim();
         String role = roleTxt.getText().toString().trim();
 
-        User user = new User(name, email, password, role);
+
+        if (dbHelper.userExists(email)) {
+            Toast.makeText(this, "Email is already registered!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        User user = new User(name, email, password, role, company);
         boolean isRegistered = dbHelper.addNewUser(user);
 
         if (isRegistered) {
             Toast.makeText(this, "User registered successfully!", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, LoginActivity.class));
-        }
-        else {
-            Toast.makeText(this, "Registration failed. Email might be taken.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Registration failed. Please try again.", Toast.LENGTH_SHORT).show();
         }
     }
 

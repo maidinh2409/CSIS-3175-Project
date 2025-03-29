@@ -13,39 +13,24 @@
         android:background="@drawable/create_event_gradient"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/register_username_text_layout"
-            style="@style/TextInputLayoutStyle"
-            android:layout_width="0dp"
-            android:layout_height="68dp"
-            android:layout_marginHorizontal="20dp"
+        <TextView
+            android:id="@+id/app_heading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="40sp"
 
-
-            android:hint="Username"
-            app:counterEnabled="true"
-            app:counterMaxLength="20"
-            app:errorEnabled="true"
-            app:hintAnimationEnabled="true"
-            app:hintTextAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintBottom_toTopOf="@+id/textView6"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2"
-            app:layout_constraintVertical_bias="0.0">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/register_username_text_input"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inputType="text"
-                android:textColorHint="@color/colorTextSecondary" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.07" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/register_email_text_layout"
@@ -65,8 +50,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/register_username_text_layout"
-            app:layout_constraintVertical_bias="0.151">
+            app:layout_constraintTop_toBottomOf="@+id/register_username_text_layout"
+            app:layout_constraintVertical_bias="0.0">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/register_email_text_input"
@@ -82,7 +67,7 @@
             android:layout_width="0dp"
             android:layout_height="68dp"
             android:layout_marginHorizontal="20dp"
-            
+
             android:focusableInTouchMode="false"
             android:hint="Password"
             app:counterEnabled="true"
@@ -94,11 +79,43 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/register_email_text_layout"
-            app:layout_constraintVertical_bias="0.178">
+            app:layout_constraintTop_toBottomOf="@+id/register_email_text_layout"
+            app:layout_constraintVertical_bias="0.0">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/register_password_text_input"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text"
+                android:textColorHint="@color/colorTextSecondary" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/register_username_text_layout"
+            style="@style/TextInputLayoutStyle"
+            android:layout_width="0dp"
+            android:layout_height="68dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+
+
+            android:hint="Username"
+            app:counterEnabled="true"
+            app:counterMaxLength="20"
+            app:errorEnabled="true"
+            app:hintAnimationEnabled="true"
+            app:hintTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/app_heading"
+            app:layout_constraintVertical_bias="0.0">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/register_username_text_input"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="text"
@@ -111,19 +128,20 @@
             android:layout_width="0dp"
             android:layout_height="68dp"
             android:layout_marginHorizontal="20dp"
-            
-            
+
+
             android:hint="Confirm password"
             app:counterEnabled="true"
             app:counterMaxLength="20"
             app:errorEnabled="true"
             app:hintAnimationEnabled="true"
             app:hintTextAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintBottom_toTopOf="@+id/textView6"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/register_password_text_layout"
-            app:layout_constraintVertical_bias="0.217">
+            app:layout_constraintTop_toBottomOf="@+id/register_password_text_layout"
+            app:layout_constraintVertical_bias="0.0">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/register_cpassword_text_input"
@@ -140,16 +158,16 @@
             android:layout_height="68dp"
             android:layout_marginHorizontal="20dp"
 
-           
+
             android:hint="Organization"
             app:counterEnabled="true"
             app:counterMaxLength="20"
             app:errorEnabled="true"
             app:hintAnimationEnabled="true"
             app:hintTextAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintBottom_toTopOf="@+id/register_btn"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_role_text_layout"
             app:layout_constraintVertical_bias="0.0">
@@ -164,68 +182,66 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/register_role_text_layout"
-            style="@style/TextInputLayoutStyle"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="68dp"
             android:layout_marginHorizontal="20dp"
 
-            
-            
             android:hint="Role"
             app:counterEnabled="true"
             app:counterMaxLength="20"
             app:errorEnabled="true"
             app:hintAnimationEnabled="true"
             app:hintTextAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:layout_constraintBottom_toTopOf="@+id/textView6"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/register_cpassword_text_layout"
-            app:layout_constraintVertical_bias="0.277">
+            app:layout_constraintTop_toBottomOf="@+id/register_cpassword_text_layout"
+            app:layout_constraintVertical_bias="0.0"
+            app:boxBackgroundColor="#80FFFFFF"
+            app:boxStrokeColor="@color/black"
+            app:hintTextColor="@color/black"
+            >
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
                 android:id="@+id/register_role_text_input"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                 
-                android:inputType="text"
-                android:textColorHint="@color/colorTextSecondary" />
+                android:inputType="none"
+                app:simpleItems="@array/simple_items"
+                android:textColorHint="@color/colorTextSecondary"
+                tools:ignore="SpeakableTextPresentCheck" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.075"
-            app:srcCompat="@drawable/ic_launcher_foreground" />
 
         <TextView
             android:id="@+id/loginNow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="50dp"
             android:text="Login now!"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6"
+            app:layout_constraintVertical_bias="0.951"
+
+            />
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:text="Already have an account?"
             android:textColor="#FFFFFF"
-            app:layout_constraintBottom_toTopOf="@+id/loginNow"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/app_heading"
+            app:layout_constraintVertical_bias="0.87" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/register_btn"
@@ -234,12 +250,12 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:text="Continue"
-            app:layout_constraintBottom_toTopOf="@id/textView6"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.4"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView6"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toBottomOf="@+id/register_org_text_layout"
+            app:layout_constraintVertical_bias="0.053" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

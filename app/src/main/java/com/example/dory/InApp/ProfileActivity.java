@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.dory.R;
 import com.example.dory.userDatabase.UserDBHandler;
 import com.example.dory.userDatabase.UserHashed;
@@ -33,7 +35,6 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        // Ánh xạ UI
         changeSetting = findViewById(R.id.change_setting_btn);
         profileImage = findViewById(R.id.profile_img);
         userName = findViewById(R.id.user_name_input);
@@ -43,7 +44,6 @@ public class ProfileActivity extends AppCompatActivity {
         userRole = findViewById(R.id.role_input);
         contactInfo = findViewById(R.id.contact_input);
 
-        // 🟢 Lấy email từ SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String email = sharedPreferences.getString("user_email", null);
 
@@ -53,7 +53,6 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // 🟢 Lấy thông tin từ database
         UserDBHandler dbHelper = new UserDBHandler(this);
         UserHashed user = dbHelper.getUserFromEmail(email);
 
@@ -63,20 +62,35 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // 🟢 Hiển thị thông tin user
         userName.setText(user.getName());
         userEmail.setText(user.getEmail());
-        userPassword.setText("********"); // Không hiển thị password thật
+        userPassword.setText("********");
         orgName.setText(user.getOrganizationName() != null ? user.getOrganizationName() : "N/A");
         userRole.setText(user.getRole());
         contactInfo.setText(user.getContactInfo() != null ? user.getContactInfo() : "N/A");
 
-        // 🟢 Nếu có ảnh đại diện, cập nhật ImageView
-        if (user.getProfilePhoto() != null && !user.getProfilePhoto().isEmpty()) {
-            int imageResource = getResources().getIdentifier(user.getProfilePhoto(), "drawable", getPackageName());
-            if (imageResource != 0) {
-                profileImage.setImageResource(imageResource);
+        // 🟢 Kiểm tra ảnh profile và hiển thị
+        if (user.getProfilePhoto() != null) {
+            String profilePhoto = String.valueOf(user.getProfilePhoto());
+
+            if (profilePhoto.startsWith("content://") || profilePhoto.startsWith("file://")) {
+                // Trường hợp URI ảnh
+                Uri imageUri = Uri.parse(profilePhoto);
+                Glide.with(this).load(imageUri).into(profileImage);
+            } else {
+                // Trường hợp Base64
+                try {
+                    byte[] decodedBytes = Base64.decode(profilePhoto, Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                    profileImage.setImageBitmap(bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Error loading profile image!", Toast.LENGTH_SHORT).show();
+                }
             }
+        } else {
+            // Nếu không có ảnh, đặt ảnh mặc định
+            profileImage.setImageResource(R.drawable.default_profile);
         }
 
         // 🟢 Xử lý khi nhấn nút chỉnh sửa profile
@@ -118,13 +132,26 @@ public class ProfileActivity extends AppCompatActivity {
         orgName.setText(user.getOrganizationName() != null ? user.getOrganizationName() : "N/A");
         contactInfo.setText(user.getContactInfo() != null ? user.getContactInfo() : "N/A");
 
-        // Load avatar nếu có
-        String imageBase64 = user.getProfilePhoto();
-        if (imageBase64 != null && !imageBase64.isEmpty()) {
-            byte[] decodedString = Base64.decode(imageBase64, Base64.DEFAULT);
-            Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            profileImage.setImageBitmap(decodedBitmap);
+        // 🟢 Update ảnh đại diện
+        String profilePhoto = String.valueOf(user.getProfilePhoto());
+        if (profilePhoto != null && !profilePhoto.isEmpty()) {
+            if (profilePhoto.startsWith("content://") || profilePhoto.startsWith("file://")) {
+                Glide.with(this).load(Uri.parse(profilePhoto)).into(profileImage);
+            } else {
+                try {
+                    byte[] decodedBytes = Base64.decode(profilePhoto, Base64.DEFAULT);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                    profileImage.setImageBitmap(bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Error loading profile image!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            profileImage.setImageResource(R.drawable.default_profile);
         }
     }
+
+
 
 }
