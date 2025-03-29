@@ -5,8 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     final static String DATABASE_NAME = "InvitesApp.db";
@@ -49,7 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 T2COL3 + " INTEGER," +
                 T2COL4 + " TEXT," +
                 T2COL5 + " TEXT," + //CHECK IF DATETIME WORKS
-                T2COL6 + " TEXT)"; //Use local date to convert from string and viceversa
+                T2COL6 + " TEXT)"; //Use local date to convert from string and vice versa
         db.execSQL(query);
     }
     @Override
@@ -75,12 +78,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         else
             return false;
     }
-    public Cursor viewEventsForOrganizer(String orgID) {
+    public ArrayList<Event> viewEventsForOrganizer(String orgID) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-        String query = "SELECT event_id, title, description, startDate, endDate, location, capacity FROM EVENT" +
-                " WHERE EVENT.organizer_id = " + orgID;
-        Cursor c = sqLiteDatabase.rawQuery(query,null);
-        return c;
+        ArrayList<Event> EventArray = new ArrayList<>();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE1, null);
+
+        if(cursor.getCount() > 0){
+            cursor.moveToFirst();
+            do{
+                EventArray.add(new Event(
+                        cursor.getInt(1),
+                        cursor.getInt(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getString(7),
+                        cursor.getInt(8))
+                );
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return EventArray;
+
+//        String query = "SELECT event_id, title, description, startDate, endDate, location, capacity FROM EVENT" +
+//                " WHERE EVENT.organizer_id = " + orgID;
+//        Cursor c = sqLiteDatabase.rawQuery(query,null);
+//        return c;
     }
     public boolean updateEvent(int eveID, int orgID, String ti, String des, String sDate, String eDate, String loc, int cap) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
