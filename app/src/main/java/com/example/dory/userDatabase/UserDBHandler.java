@@ -365,6 +365,26 @@ public class UserDBHandler extends SQLiteOpenHelper {
      * @param oldVersion the old version number
      * @param newVersion the new version number
      */
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE1);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE2);
+        onCreate(db);
+    }
+    /**
+     * Adds a new event to the database.
+     *
+     * @param eveID   The unique identifier for the event.
+     * @param orgID   The unique identifier for the organizer.
+     * @param ti      The title of the event.
+     * @param des     The description of the event.
+     * @param sDate   The start date of the event.
+     * @param eDate   The end date of the event.
+     * @param loc     The location of the event.
+     * @param cap     The capacity of the event.
+     * @return        {@code true} if the event was successfully added, otherwise {@code false}.
+     */
     public boolean addEvent(int eveID, int orgID, String ti, String des, String sDate, String eDate, String loc, int cap) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ContentValues values = new ContentValues();
@@ -377,11 +397,17 @@ public class UserDBHandler extends SQLiteOpenHelper {
         values.put(T1COL7,loc);
         values.put(T1COL8,cap);
         long r = sqLiteDatabase.insert(TABLE1,null,values);
-        if(r>0)
+        if(r>=0)
             return true;
         else
             return false;
     }
+    /**
+     * Retrieves a list of events for a specific organizer.
+     *
+     * @param orgID The unique identifier of the organizer whose events are to be retrieved.
+     * @return An {@code ArrayList<Event>} containing all events associated with the given organizer.
+     */
     public ArrayList<Event> viewEventsForOrganizer(String orgID) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ArrayList<Event> EventArray = new ArrayList<>();
@@ -404,12 +430,20 @@ public class UserDBHandler extends SQLiteOpenHelper {
         }
         cursor.close();
         return EventArray;
-
-//        String query = "SELECT event_id, title, description, startDate, endDate, location, capacity FROM EVENT" +
-//                " WHERE EVENT.organizer_id = " + orgID;
-//        Cursor c = sqLiteDatabase.rawQuery(query,null);
-//        return c;
     }
+    /**
+     * Updates an existing event in the database.
+     *
+     * @param eveID  The unique identifier of the event to be updated.
+     * @param orgID  The unique identifier of the organizer.
+     * @param ti     The updated title of the event.
+     * @param des    The updated description of the event.
+     * @param sDate  The updated start date of the event.
+     * @param eDate  The updated end date of the event.
+     * @param loc    The updated location of the event.
+     * @param cap    The updated capacity of the event.
+     * @return       {@code true} if the event was successfully updated, otherwise {@code false}.
+     */
     public boolean updateEvent(int eveID, int orgID, String ti, String des, String sDate, String eDate, String loc, int cap) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -427,6 +461,12 @@ public class UserDBHandler extends SQLiteOpenHelper {
         else
             return false;
     }
+    /**
+     * Deletes an event from the database.
+     *
+     * @param eveID The unique identifier of the event to be deleted.
+     * @return {@code true} if the event was successfully deleted, otherwise {@code false}.
+     */
     public boolean delEvent(int eveID) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         int d = sqLiteDatabase.delete(TABLE1,"event_id=?",
@@ -436,6 +476,16 @@ public class UserDBHandler extends SQLiteOpenHelper {
         else
             return false;
     }
+    /**
+     * Adds a new invitation to the database.
+     *
+     * @param invID     The unique identifier for the invitation.
+     * @param eveID     The unique identifier of the event associated with the invitation.
+     * @param atteID    The unique identifier of the attendee receiving the invitation.
+     * @param status    The status of the invitation (e.g., pending, accepted, declined).
+     * @param creaTime  The creation timestamp of the invitation.
+     * @return          {@code true} if the invitation was successfully added, otherwise {@code false}.
+     */
     public boolean addInvitation(int invID, int eveID, int atteID, String status, String creaTime) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ContentValues values = new ContentValues();
@@ -451,6 +501,12 @@ public class UserDBHandler extends SQLiteOpenHelper {
         else
             return false;
     }
+    /**
+     * Retrieves a list of invitations for a specific attendee.
+     *
+     * @param atteID The unique identifier of the attendee whose invitations are to be retrieved.
+     * @return An {@code ArrayList<Invitation>} containing all invitations associated with the given attendee.
+     */
     public ArrayList<Invitation> viewInvitationsForAttendeeID(String atteID) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ArrayList<Invitation> InvitationArray = new ArrayList<>();
@@ -471,12 +527,18 @@ public class UserDBHandler extends SQLiteOpenHelper {
         }
         cursor.close();
         return InvitationArray;
-
-//        String query = "SELECT invitation_id, event_id, status, creationTime, responseTime FROM INVITATION" +
-//                " WHERE INVITATION.attendee_id = " + atteID;
-//        Cursor c = sqLiteDatabase.rawQuery(query,null);
-//        return c;
     }
+    /**
+     * Updates an existing invitation in the database.
+     *
+     * @param invID     The unique identifier of the invitation to be updated.
+     * @param eveID     The unique identifier of the event associated with the invitation.
+     * @param atteID    The unique identifier of the attendee receiving the invitation.
+     * @param status    The updated status of the invitation (e.g., pending, accepted, declined).
+     * @param creaTime  The updated creation timestamp of the invitation.
+     * @param respTime  The updated response timestamp of the invitation.
+     * @return          {@code true} if the invitation was successfully updated, otherwise {@code false}.
+     */
     public boolean updateInvitation(int invID, int eveID, int atteID, String status, String creaTime, String respTime) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ContentValues values = new ContentValues();
@@ -493,6 +555,12 @@ public class UserDBHandler extends SQLiteOpenHelper {
         else
             return false;
     }
+    /**
+     * Deletes an invitation from the database based on its unique identifier.
+     *
+     * @param invID The unique identifier of the invitation to be deleted.
+     * @return {@code true} if the invitation was successfully deleted, otherwise {@code false}.
+     */
     public boolean delInvitation(int invID) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         int d = sqLiteDatabase.delete(TABLE2,"invitation_id=?",
@@ -501,13 +569,5 @@ public class UserDBHandler extends SQLiteOpenHelper {
             return true;
         else
             return false;
-    }
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE1);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE2);
-        onCreate(db);
-
     }
 }
