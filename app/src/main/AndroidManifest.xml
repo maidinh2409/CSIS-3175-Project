@@ -16,6 +16,18 @@
         android:theme="@style/Theme.Dory"
         tools:targetApi="31">
         <activity
+            android:name=".events.UserSelectionActivity"
+            android:exported="true" />
+        <activity
+            android:name=".events.EventActivity"
+            android:exported="false" />
+        <activity
+            android:name=".user.AttendeeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".user.OrganizerActivity"
+            android:exported="true" />
+        <activity
             android:name=".events.CreateEventActivity"
             android:exported="true" />
         <activity
@@ -27,31 +39,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".InApp.Home"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
         <activity
             android:name=".InApp.ProfileActivity"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
         <activity
             android:name=".InApp.ProfileSetting"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
         <activity
             android:name=".LoginPages.LoginActivity"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
         <activity
             android:name=".LoginPages.RegistrationActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>

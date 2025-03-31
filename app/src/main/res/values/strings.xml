@@ -8,15 +8,21 @@
     <string name="choose_invitees_btn">Choose invitees</string>
     <string name="create_event_btn">Create</string>
     <string name="create_event_img_desc">calendarImg</string>
-    <string name="profile_image" />
-    <string name="hint_name" />
-    <string name="default_name" />
-    <string name="hint_email" />
-    <string name="default_email" />
-    <string name="hint_password" />
-    <string name="default_password" />
-    <string name="hint_role" />
-    <string name="default_role" />
-    <string name="label">name_label\n</string>
-    <string name="profile_image_description" />
+    <string name="organizer_appbar_title">Organizer</string>
+    <string name="event_activity_appbar_heading">Event Details</string>
+    <string name="search_events_input">Search Events</string>
+    <string name="dynamic_heading">Hello,</string>
+    <string name="open_btn">Open</string>
+    <string name="delete_event_btn">Delete</string>
+    <string name="card_event_name">Event Name</string>
+    <string name="card_event_date">Event Date</string>
+    <string name="card_event_location">Event Location</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="duration_hours_input">Duration (hours)</string>
+    <string name="capacity_input">Capacity</string>
+    <string name="send_btn">Send</string>
+    <string name="invite_users_heading">Invite users</string>
+    <string name="attendee_appbar_heading">Attendee</string>
+    <string name="search_bar_hint">Search</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.example.dory.userDatabase;
 
-public class Event {
+import java.io.Serializable;
+
+public class Event implements Serializable {
     public int eventID;
     public int organizerID;
     public String title;

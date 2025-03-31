@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -71,7 +72,6 @@ public class ProfileSetting extends AppCompatActivity {
         editImage.setOnClickListener(v -> openGallery());
         updateSetting.setOnClickListener(v -> updateUserProfile());
     }
-
 
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -143,12 +143,11 @@ public class ProfileSetting extends AppCompatActivity {
                 userName_s.getText().toString(),
                 currentUserEmail,
                 orgName_s.getText().toString(),
-                contactInfo_s.getText().toString()
-        );
+                contactInfo_s.getText().toString());
 
         if (imageUri != null) {
             String imagePath = imageUri.toString(); // Lưu URI dạng chuỗi vào database
-            user.setProfilePhoto(Uri.parse(imagePath));
+            user.setProfilePhoto(imagePath);
         }
 
         boolean updateSuccess = userDBHelper.updateUser(user);

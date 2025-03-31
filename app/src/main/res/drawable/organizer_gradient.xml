@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base background color: #ffda99 -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFDA99" />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:centerX="90%"
+                android:centerY="13%"
+                android:endColor="@android:color/transparent"
+                android:gradientRadius="120%p"
+                android:startColor="#DEB368"
+                android:type="radial" />
+        </shape>
+    </item>
+
+    <!-- Gradient 2: radial-gradient(at 63% 47%, hsla(49,83%,77%,1), transparent) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:centerX="63%"
+                android:centerY="47%"
+                android:endColor="@android:color/transparent"
+                android:gradientRadius="120%p"
+                android:startColor="#F5E393"
+                android:type="radial" />
+        </shape>
+    </item>
+
+    <!-- Gradient 3: radial-gradient(at 55% 41%, hsla(85,85%,63%,1), transparent) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:centerX="55%"
+                android:centerY="41%"
+                android:endColor="@android:color/transparent"
+                android:gradientRadius="120%p"
+                android:startColor="#AEF151"
+                android:type="radial" />
+        </shape>
+    </item>
+
+    <!-- Gradient 4: radial-gradient(at 11% 25%, hsla(235,90%,75%,1), transparent) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:centerX="11%"
+                android:centerY="25%"
+                android:endColor="@android:color/transparent"
+                android:gradientRadius="120%p"
+                android:startColor="#868FF8"
+                android:type="radial" />
+        </shape>
+    </item>
+
+    <!-- Gradient 5: radial-gradient(at 30% 85%, hsla(340,97%,67%,1), transparent) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:centerX="30%"
+                android:centerY="85%"
+                android:endColor="@android:color/transparent"
+                android:gradientRadius="150%p"
+                android:startColor="#87FD59C6"
+                android:type="radial" />
+        </shape>
+    </item>
+
+    <!-- Gradient 6: radial-gradient(at 96% 24%, hsla(132,71%,73%,1), transparent) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:centerX="96%"
+                android:centerY="24%"
+                android:endColor="@android:color/transparent"
+                android:gradientRadius="120%p"
+                android:startColor="#89EB9D"
+                android:type="radial" />
+        </shape>
+    </item>
+
+    <!-- Gradient 7: radial-gradient(at 22% 41%, hsla(19,71%,77%,1), transparent) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:centerX="22%"
+                android:centerY="41%"
+                android:endColor="@android:color/transparent"
+                android:gradientRadius="120%p"
+                android:startColor="#EEB59B"
+                android:type="radial" />
+        </shape>
+    </item>
+
+</layer-list>

@@ -91,7 +91,6 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email_text_layout_s"
-        style="@style/DisabledView"
         android:layout_width="0dp"
         android:layout_height="68dp"
         android:layout_marginHorizontal="20dp"
@@ -177,10 +176,12 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/default_profile"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/change_img_btn_s"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/change_img_btn_s"

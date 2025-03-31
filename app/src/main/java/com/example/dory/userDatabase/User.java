@@ -1,33 +1,33 @@
 package com.example.dory.userDatabase;
 
-import android.net.Uri;
+import java.io.Serializable;
 
 /**
- * A class to create User objects which are used by UserDBHandler to add or update users.
+ * A class to create User objects which are used by UserDBHandler to add or
+ * update users.
  * No methods besides constructors, getters and setters;
  */
-public class User {
+public class User implements Serializable {
     private String name;
     private String email;
     private String password;
     private String role;
-    private Uri profilePhoto;
+    private String profilePhoto;
     private String organizationName;
     private String contactInfo;
 
     /**
-     * Creates a User object with a name, email, password, and role. The photo, organization name, and contact info are optional.
-     * @param name the user's name
-     * @param email the user's email
-     * @param password the user's password
-     * @param role the user's role (attendee or organizer)
+     * Creates a User object with a name, email, password, and role. The photo,
+     * organization name, and contact info are optional.
+     * 
+     * @param name             the user's name
+     * @param email            the user's email
+     * @param password         the user's password
+     * @param role             the user's role (attendee or organizer)
      * @param organizationName (optional) the user's organization name
      */
 
-
-
-
-    public User(String name, String email, String password, String role, String organizationName){
+    public User(String name, String email, String password, String role, String organizationName) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -37,8 +37,7 @@ public class User {
         this.profilePhoto = null;
     };
 
-
-    public User (String name, String email, String organizationName, String contactInfo) {
+    public User(String name, String email, String organizationName, String contactInfo) {
         this.name = name;
         this.email = email;
         this.organizationName = organizationName;
@@ -78,11 +77,11 @@ public class User {
         this.role = role;
     }
 
-    public Uri getProfilePhoto() {
+    public String getProfilePhoto() {
         return profilePhoto;
     }
 
-    public void setProfilePhoto(Uri profilePhoto) {
+    public void setProfilePhoto(String profilePhoto) {
         this.profilePhoto = profilePhoto;
     }
 

@@ -23,8 +23,12 @@
     </color>          <!-- A light divider for subtle separation -->
 
     <!-- Functional Colors -->
-    <color name="colorSuccess">#C8E6C9</color>          <!-- A gentle pastel green for success messages -->
+    <color name="colorSuccess">#C8E6C9
+    </color>          <!-- A gentle pastel green for success messages -->
     <color name="colorWarning">#FFECB3</color>          <!-- A light, warm warning color -->
     <color name="colorError">#EF9A9A</color>            <!-- A soft pastel red for error states -->
-    <color name="gradientBackground">#99ffa0</color>
+    <color name="createEventGradientBackground">#99ffa0</color>
+    <color name="organizerGradientBackground">#ffda99</color>
+
+    <color name="alphaBlack">#CC000000</color>
 </resources>
