@@ -411,7 +411,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
     public ArrayList<Event> viewEventsForOrganizer(String orgID) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ArrayList<Event> EventArray = new ArrayList<>();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE1, null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE1 + " WHERE " + T1COL2 + " = " + orgID, null);
 
         if(cursor.getCount() > 0){
             cursor.moveToFirst();
