@@ -19,6 +19,7 @@ public class PasswordHandler {
     private static final Random RANDOM = new SecureRandom();
     private static final int ITERATIONS = 10000;
     private static final int KEY_LENGTH = 256;
+    private static final String OTP_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     /**
      * Static utility class. No constructors needed to use any of it's methods.
@@ -79,5 +80,18 @@ public class PasswordHandler {
             }
         }
         return true;
+    }
+
+    /**
+     * Generates a random OTP
+     * @param length the length of the OTP code;
+     * @return a string with random characters of the specified length
+     */
+    public static String generateOtp(int length){
+        StringBuilder otp = new StringBuilder();
+        for(int i=0; i<length; i++){
+           otp.append(OTP_CHARACTERS.charAt(RANDOM.nextInt(OTP_CHARACTERS.length())));
+        }
+        return otp.toString();
     }
 }

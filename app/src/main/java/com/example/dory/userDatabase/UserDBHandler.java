@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class UserDBHandler extends SQLiteOpenHelper {
     private static final String DB_NAME = "dory.db";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     private static final String TABLE_NAME = "user_table";
     private static final String ID_COL = "user_id";
     private static final String NAME_COL = "name";
@@ -27,6 +27,8 @@ public class UserDBHandler extends SQLiteOpenHelper {
     private static final String ROLE_COL = "role";
     private static final String ORGANIZATION_COL = "organizationName";
     private static final String CONTACT_COL = "contactInfo";
+    private static final String RESET_OTP_COL = "passwordResetOtp";
+    private static final String RESET_TIME_COL = "passwordResetTimestamp";
     final static String TABLE1 = "EVENT"; // Table Event
     final static String T1COL1 = "event_id";
     final static String T1COL2 = "organizer_id";
@@ -69,7 +71,10 @@ public class UserDBHandler extends SQLiteOpenHelper {
                 + ROLE_COL + " VARCHAR(9) NOT NULL, "
                 + PHOTO_COL + " VARCHAR(50), "
                 + ORGANIZATION_COL + " VARCHAR(100), "
-                + CONTACT_COL + " VARCHAR(50))";
+                + CONTACT_COL + " VARCHAR(50), "
+                + RESET_OTP_COL + " VARCHAR(6),"
+                + RESET_TIME_COL + " BIGINT DEFAULT -1"
+                + ")";
 
         db.execSQL(query);
 
@@ -374,6 +379,125 @@ public class UserDBHandler extends SQLiteOpenHelper {
         String salt = userHashed.getSalt();
         String hash = userHashed.getHash();
         return PasswordHandler.validatePassword(password, salt, hash);
+    }
+
+    /**
+     * Creates an OTP, saves it along with the time of creation in the database
+     * @param email the email address of the user whose password is being reset.
+     * @param length the length of the OTP, must be >= 1.
+     * @return true if successful, false if unsuccessful.
+     */
+    public boolean generateOtp(String email, int length){
+        if (email == null || !userExists(email) || length < 1) {
+            return false;
+        }
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String otp = PasswordHandler.generateOtp(length);
+
+        values.put(RESET_OTP_COL, otp);
+        values.put(RESET_TIME_COL, System.currentTimeMillis());
+
+        long r = db.update(TABLE_NAME, values, EMAIL_COL + "=?", new String[]{email});
+        db.close();
+        if (r > 0)
+            return true;
+        return false;
+    }
+
+    /**
+     * Receive the OTP code from the database.
+     * @param email the email of the user whose OTP code you want to receive.
+     * @return the OTP code as a String, or null if the user has no OTP or doesn't exist.
+     */
+    public String getOtp(String email){
+        if (email == null || !userExists(email)) {
+            return null;
+        }
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + EMAIL_COL + "=?",
+                new String[]{email});
+        String otp = null;
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            otp = cursor.getString(9);
+        }
+        cursor.close();
+        return otp;
+    }
+
+    /**
+     * Receive the OTP creation time from the database.
+     * @param email the email of the user whose OTP creation time you want to receive.
+     * @return the creation time as long, or -1 if it doesn't exist.
+     */
+    public long getOtpTime(String email){
+        if (email == null || !userExists(email)) {
+            return -1L;
+        }
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + EMAIL_COL + "=?",
+                new String[]{email});
+        long otpTime = -1;
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            otpTime = cursor.getLong(10);
+        }
+        cursor.close();
+        return otpTime;
+    }
+
+    /**
+     * Removes the OTP code and OTP creation time entry from the database.
+     * @param email the email of the user whose OTP code and time you want to delete.
+     * @return true if successful or false if not.
+     */
+    public boolean removeOtp(String email){
+        if (email == null || !userExists(email)) {
+            return false;
+        }
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(RESET_OTP_COL, (String) null);
+        values.put(RESET_TIME_COL, -1L);
+
+        long r = db.update(TABLE_NAME, values, EMAIL_COL + "=?", new String[]{email});
+        db.close();
+        if (r > 0)
+            return true;
+        return false;
+    }
+
+    /**
+     * Validates an OTP code and time limit against the OTP entry in the database. If the validation
+     * is successful then this method will also erase the OTP entry in the database. Therefore this
+     * method can only return true once for each OTP generated.
+     * @param email the email of the user whose OTP code you want to validate.
+     * @param otp the OTP code that will be compared to the database entry, case sensitive.
+     * @param timeLimitInHours the time limit of the OTP in hours. For example,
+     *                         if the given time limit is 24 then this function will fail the
+     *                         validation if 24 hours has passed since the OTP was generated.
+     * @return true if the given OTP matches the database entry and the time difference doesn't
+     * exceed the given time limit, returns false in every other case.
+     */
+    public boolean validateOtp(String email, String otp, int timeLimitInHours){
+        if (email == null || !userExists(email) || timeLimitInHours < 1 || getOtp(email) == null || getOtpTime(email) == -1) {
+            return false;
+        }
+        long currentTime = System.currentTimeMillis();
+        long timeDifference = timeLimitInHours * 60000L;
+        if(currentTime - getOtpTime(email) > timeDifference || otp.equals(getOtp(email))){
+            return false;
+        }
+        removeOtp(email);
+        return true;
     }
 
     /**
