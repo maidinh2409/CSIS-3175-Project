@@ -842,12 +842,11 @@ public class UserDBHandler extends SQLiteOpenHelper {
     public ArrayList<Invitation> getPastEventsForAttendee(int attendeeID) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ArrayList<Invitation> InvitationArray = new ArrayList<>();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE2 + " WHERE " + T2COL3 + " = " + attendeeID, null);
 
-//        ArrayList<Invitation> Invitations = getEventsForAttendee(attendeeID);
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-//        LocalDateTime today = LocalDateTime.now();
-//        String formattedDateTime = today.format(formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime today = LocalDateTime.now();
+        String formattedDateTime = today.format(formatter);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE2 + " JOIN " + TABLE1 + " ON TABLE2.event_id = TABLE1.event_id" + " WHERE " + T2COL3 + " = " + attendeeID + " AND " + T1COL6 + " < " + formattedDateTime, null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
