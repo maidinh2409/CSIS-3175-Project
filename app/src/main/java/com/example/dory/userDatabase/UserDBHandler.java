@@ -382,7 +382,16 @@ public class UserDBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Creates an OTP, saves it along with the time of creation in the database
+     * Creates an OTP with a length of 6 characters, saves it along with the time of creation in the database
+     * @param email the email address of the user whose password is being reset.
+     * @return true if successful, false if unsuccessful.
+     */
+    public boolean generateOtp(String email){
+        return generateOtp(email, 6);
+    }
+
+    /**
+     * Creates an OTP with a custom length, saves it along with the time of creation in the database
      * @param email the email address of the user whose password is being reset.
      * @param length the length of the OTP, must be >= 1.
      * @return true if successful, false if unsuccessful.
@@ -476,9 +485,26 @@ public class UserDBHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * Validates an OTP code and time limit against the OTP entry in the database. If the validation
-     * is successful then this method will also erase the OTP entry in the database. Therefore this
-     * method can only return true once for each OTP generated.
+     * Validates an OTP code against the OTP entry in the database.
+     * This method has a time limit of 1 hour, meaning it will always return false if the method
+     * is called against an otp generated more than 1 hour ago.
+     * If the validation is successful then this method will also erase the OTP entry in the database.
+     * Therefore this method can only return true once for each OTP generated.
+     * @param email the email of the user whose OTP code you want to validate.
+     * @param otp the OTP code that will be compared to the database entry, case sensitive.
+     * @return true if the given OTP matches the database entry and the time difference doesn't
+     * exceed the given time limit, returns false in every other case.
+     */
+    public boolean validateOtp(String email, String otp){
+        return validateOtp(email, otp, 1);
+    }
+
+    /**
+     * Validates an OTP code against the OTP entry in the database.
+     * This method can be given a custom time limit, meaning it will always return false if the method
+     * is called against an otp generated more than "timeLimitInHours" hours ago.
+     * If the validation is successful then this method will also erase the OTP entry in the database.
+     * Therefore this method can only return true once for each OTP generated.
      * @param email the email of the user whose OTP code you want to validate.
      * @param otp the OTP code that will be compared to the database entry, case sensitive.
      * @param timeLimitInHours the time limit of the OTP in hours. For example,
