@@ -8,6 +8,10 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -817,7 +821,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
     public ArrayList<Invitation> getAcceptedEventsForAttendee(int attendeeID) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ArrayList<Invitation> InvitationArray = new ArrayList<>();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE2 + " WHERE " + T2COL3 + " = " + attendeeID, null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE2 + " WHERE " + T2COL3 + " = " + attendeeID + " AND " + T2COL4 + " = ACCEPTED", null);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -839,6 +843,11 @@ public class UserDBHandler extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ArrayList<Invitation> InvitationArray = new ArrayList<>();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE2 + " WHERE " + T2COL3 + " = " + attendeeID, null);
+
+//        ArrayList<Invitation> Invitations = getEventsForAttendee(attendeeID);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        LocalDateTime today = LocalDateTime.now();
+//        String formattedDateTime = today.format(formatter);
 
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
