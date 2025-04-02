@@ -519,7 +519,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
         }
         long currentTime = System.currentTimeMillis();
         long timeDifference = timeLimitInHours * 60000L;
-        if(currentTime - getOtpTime(email) > timeDifference || otp.equals(getOtp(email))){
+        if(currentTime - getOtpTime(email) > timeDifference || !otp.equals(getOtp(email))){
             return false;
         }
         removeOtp(email);
