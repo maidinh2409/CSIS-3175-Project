@@ -776,6 +776,12 @@ public class UserDBHandler extends SQLiteOpenHelper {
             return false;
     }
 
+    /**
+     * Retrieves a list of invitations for a specific event based on the given event ID.
+     *
+     * @param eventID The ID of the event for which invitations are to be retrieved.
+     * @return An ArrayList of {@link Invitation} objects associated with the given event ID.
+     */
     public ArrayList<Invitation> getEventByID(int eventID) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ArrayList<Invitation> InvitationArray = new ArrayList<>();
@@ -797,6 +803,12 @@ public class UserDBHandler extends SQLiteOpenHelper {
         return InvitationArray;
     }
 
+    /**
+     * Retrieves a list of invitations for a specific attendee based on the given attendee ID.
+     *
+     * @param attendeeID The ID of the attendee whose event invitations are to be retrieved.
+     * @return An ArrayList of {@link Invitation} objects associated with the given attendee ID.
+     */
     public ArrayList<Invitation> getEventsForAttendee(int attendeeID) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ArrayList<Invitation> InvitationArray = new ArrayList<>();
@@ -818,6 +830,12 @@ public class UserDBHandler extends SQLiteOpenHelper {
         return InvitationArray;
     }
 
+    /**
+     * Retrieves a list of accepted event invitations for a specific attendee based on the given attendee ID.
+     *
+     * @param attendeeID The ID of the attendee whose accepted event invitations are to be retrieved.
+     * @return An ArrayList of {@link Invitation} objects that have been accepted by the attendee.
+     */
     public ArrayList<Invitation> getAcceptedEventsForAttendee(int attendeeID) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ArrayList<Invitation> InvitationArray = new ArrayList<>();
@@ -839,6 +857,13 @@ public class UserDBHandler extends SQLiteOpenHelper {
         return InvitationArray;
     }
 
+    /**
+     * Retrieves a list of past events for a specific attendee based on the given attendee ID.
+     * A past event is determined by comparing the event's date and time with the current date and time.
+     *
+     * @param attendeeID The ID of the attendee whose past events are to be retrieved.
+     * @return An ArrayList of {@link Invitation} objects for events that have already occurred.
+     */
     public ArrayList<Invitation> getPastEventsForAttendee(int attendeeID) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         ArrayList<Invitation> InvitationArray = new ArrayList<>();
@@ -863,5 +888,4 @@ public class UserDBHandler extends SQLiteOpenHelper {
         cursor.close();
         return InvitationArray;
     }
-
 }
