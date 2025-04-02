@@ -79,12 +79,11 @@ public class LoginActivity extends AppCompatActivity {
         if (dbHelper.validateUser(emailTxt, passwordTxt)) {
             UserHashed loggedInUser = dbHelper.getUserFromEmail(emailTxt);
 
-            // Lưu email vào SharedPreferences
             SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("user_email", loggedInUser.getEmail());
             editor.putString("user_role", loggedInUser.getRole());
-            editor.apply(); // Lưu lại dữ liệu
+            editor.apply();
 
             Toast.makeText(LoginActivity.this, "Welcome, " + loggedInUser.getName(), Toast.LENGTH_SHORT).show();
             if (loggedInUser.getRole().equalsIgnoreCase("organizer")) {
@@ -98,10 +97,7 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(LoginActivity.this, "Unknown role: " + loggedInUser.getRole(), Toast.LENGTH_SHORT).show();
             }
-//            // Chuyển sang ProfileActivity
-//            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-//            startActivity(intent);
-//            finish(); // Kết thúc LoginActivity
+
         } else {
             Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
         }

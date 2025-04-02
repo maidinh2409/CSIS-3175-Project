@@ -57,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (email == null) {
             Toast.makeText(this, "User not found!", Toast.LENGTH_SHORT).show();
-            finish(); // Đóng activity nếu không có email
+            finish();
             return;
         }
 
@@ -140,7 +140,7 @@ public class ProfileActivity extends AppCompatActivity {
         orgName.setText(user.getOrganizationName() != null ? user.getOrganizationName() : "N/A");
         contactInfo.setText(user.getContactInfo() != null ? user.getContactInfo() : "N/A");
 
-        // 🟢 Update ảnh đại diện
+
         String profilePhoto = String.valueOf(user.getProfilePhoto());
         if (profilePhoto != null && !profilePhoto.isEmpty()) {
             if (profilePhoto.startsWith("content://") || profilePhoto.startsWith("file://")) {

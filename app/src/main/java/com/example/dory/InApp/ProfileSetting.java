@@ -110,16 +110,16 @@ public class ProfileSetting extends AppCompatActivity {
         orgName_s.setText(user.getOrganizationName() != null ? user.getOrganizationName() : "N/A");
         contactInfo_s.setText(user.getContactInfo() != null ? user.getContactInfo() : "N/A");
 
-        // Load avatar nếu tồn tại
+
         if (user.getProfilePhoto() != null) {
             String photoString = String.valueOf(user.getProfilePhoto());
 
             if (photoString.startsWith("content://") || photoString.startsWith("file://")) {
-                // Nếu là URI, dùng setImageURI()
+
                 Uri imageUri = Uri.parse(photoString);
                 profileImage.setImageURI(imageUri);
             } else {
-                // Nếu là Base64, giải mã và hiển thị
+
                 try {
                     byte[] decodedBytes = Base64.decode(photoString, Base64.DEFAULT);
                     Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
@@ -146,7 +146,7 @@ public class ProfileSetting extends AppCompatActivity {
                 contactInfo_s.getText().toString());
 
         if (imageUri != null) {
-            String imagePath = imageUri.toString(); // Lưu URI dạng chuỗi vào database
+            String imagePath = imageUri.toString();
             user.setProfilePhoto(imagePath);
         }
 
