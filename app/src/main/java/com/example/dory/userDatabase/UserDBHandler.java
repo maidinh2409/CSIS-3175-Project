@@ -608,6 +608,7 @@ public class UserDBHandler extends SQLiteOpenHelper {
         return EventArray;
     }
 
+
     /**
      * Updates an existing event in the database.
      *
@@ -770,4 +771,89 @@ public class UserDBHandler extends SQLiteOpenHelper {
         else
             return false;
     }
+
+    public ArrayList<Invitation> getEventByID(int eventID) {
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        ArrayList<Invitation> InvitationArray = new ArrayList<>();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE2 + " WHERE " + T2COL2 + " = " + eventID, null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                InvitationArray.add(new Invitation(
+                        cursor.getInt(0),
+                        cursor.getInt(1),
+                        cursor.getInt(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return InvitationArray;
+    }
+
+    public ArrayList<Invitation> getEventsForAttendee(int attendeeID) {
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        ArrayList<Invitation> InvitationArray = new ArrayList<>();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE2 + " WHERE " + T2COL3 + " = " + attendeeID, null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                InvitationArray.add(new Invitation(
+                        cursor.getInt(0),
+                        cursor.getInt(1),
+                        cursor.getInt(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return InvitationArray;
+    }
+
+    public ArrayList<Invitation> getAcceptedEventsForAttendee(int attendeeID) {
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        ArrayList<Invitation> InvitationArray = new ArrayList<>();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE2 + " WHERE " + T2COL3 + " = " + attendeeID, null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                InvitationArray.add(new Invitation(
+                        cursor.getInt(0),
+                        cursor.getInt(1),
+                        cursor.getInt(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return InvitationArray;
+    }
+
+    public ArrayList<Invitation> getPastEventsForAttendee(int attendeeID) {
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        ArrayList<Invitation> InvitationArray = new ArrayList<>();
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE2 + " WHERE " + T2COL3 + " = " + attendeeID, null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                InvitationArray.add(new Invitation(
+                        cursor.getInt(0),
+                        cursor.getInt(1),
+                        cursor.getInt(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return InvitationArray;
+    }
+
 }
