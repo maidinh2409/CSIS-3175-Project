@@ -384,9 +384,9 @@ public class UserDBHandler extends SQLiteOpenHelper {
     /**
      * Creates an OTP with a length of 6 characters, saves it along with the time of creation in the database
      * @param email the email address of the user whose password is being reset.
-     * @return true if successful, false if unsuccessful.
+     * @return the OTP code if successful, NULL if unsuccessful.
      */
-    public boolean generateOtp(String email){
+    public String generateOtp(String email){
         return generateOtp(email, 6);
     }
 
@@ -394,11 +394,11 @@ public class UserDBHandler extends SQLiteOpenHelper {
      * Creates an OTP with a custom length, saves it along with the time of creation in the database
      * @param email the email address of the user whose password is being reset.
      * @param length the length of the OTP, must be >= 1.
-     * @return true if successful, false if unsuccessful.
+     * @return the OTP code if successful, NULL if unsuccessful.
      */
-    public boolean generateOtp(String email, int length){
+    public String generateOtp(String email, int length){
         if (email == null || !userExists(email) || length < 1) {
-            return false;
+            return null;
         }
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -411,8 +411,8 @@ public class UserDBHandler extends SQLiteOpenHelper {
         long r = db.update(TABLE_NAME, values, EMAIL_COL + "=?", new String[]{email});
         db.close();
         if (r > 0)
-            return true;
-        return false;
+            return otp;
+        return null;
     }
 
     /**
