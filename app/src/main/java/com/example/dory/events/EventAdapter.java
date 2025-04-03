@@ -1,14 +1,9 @@
 package com.example.dory.events;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Filter;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,19 +11,43 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.dory.R;
 import com.example.dory.userDatabase.Event;
 import com.example.dory.userDatabase.UserDBHandler;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter for the event list
+ */
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     private List<Event> eventList;
     private List<Event> eventListFull;
     private UserDBHandler db;
+    private boolean showButtons;
+    private OnEventActionListener listener;
 
-    public EventAdapter(List<Event> eventList) {
+    /**
+     * interface for event actions
+     */
+    public interface OnEventActionListener {
+        void onOpen(Event event);
+
+        void onDelete(Event event);
+    }
+
+    /**
+     * constructor for the event adapter
+     *
+     * @param eventList   list of events to display
+     * @param showButtons whether to show the delete button
+     * @param listener    listener for event actions
+     */
+    public EventAdapter(List<Event> eventList, boolean showButtons, OnEventActionListener listener) {
         this.eventList = eventList;
+        this.listener = listener;
         this.eventListFull = new ArrayList<>(eventList);
+        this.showButtons = showButtons;
     }
 
     @NonNull
@@ -40,41 +59,55 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.getEventName().setText(eventList.get(position).getTitle());
-        holder.getEventDate().setText(eventList.get(position).getStartDate());
-        holder.getEventLocation().setText(eventList.get(position).getLocation());
-        holder.getDeleteButton().setOnClickListener(new View.OnClickListener() {
+        Event event = eventList.get(position);
+        holder.getEventName().setText(event.getTitle());
+        holder.getEventDate().setText(event.getStartDate());
+        holder.getEventLocation().setText(event.getLocation());
+        if (!showButtons) {
+            holder.getDeleteButton().setVisibility(View.GONE);
+        } else {
+            holder.getDeleteButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        listener.onDelete(event);
+                    }
+                }
+            });
+        }
+        holder.getOpenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showDeleteDialog(view.getContext(), holder.getAdapterPosition());
+                if (listener != null) {
+                    listener.onOpen(event);
+                }
             }
         });
     }
 
-    private void showDeleteDialog(Context context, int position) {
-        new MaterialAlertDialogBuilder(context)
-                .setTitle("Are you sure you want to delete this event?")
-                .setNeutralButton("Cancel", null)
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    // Handle delete action
-                    db = new UserDBHandler(context);
-                    Event event = eventList.get(position);
-                    db.delEvent(event.getEventID());
-                    eventList.remove(position);
-                    eventListFull.remove(event);
-                    notifyItemRemoved(position);
-                    Toast.makeText(context, "Event deleted successfully: " + position, Toast.LENGTH_SHORT).show();
-                    db.close();
-                })
-                .show();
+    /**
+     * removes an event from the list and notifies the adapter
+     *
+     * @param event event to remove
+     */
+    public void removeEvent(Event event) {
+        int position = eventList.indexOf(event);
+        if (position != -1) {
+            eventList.remove(position);
+            notifyItemRemoved(position);
+        }
     }
-
 
     @Override
     public int getItemCount() {
         return eventList.size();
     }
 
+    /**
+     * filters the event list based on text input
+     *
+     * @return Filter object
+     */
     public Filter getFilter() {
         return new Filter() {
             @Override
@@ -90,15 +123,18 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                         }
                     }
                 }
-
                 FilterResults results = new FilterResults();
                 results.values = filteredList;
                 return results;
             }
 
+            /**
+             * updates the event list with the filtered list
+             * @param charSequence text input
+             * @param filterResults filtered list
+             */
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                Log.d("EventAdapter", "publishResults called with " + filterResults.values.toString());
                 eventList.clear();
                 eventList.addAll((List<Event>) filterResults.values);
                 notifyDataSetChanged();
@@ -106,13 +142,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         };
     }
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView eventName;
-        private final TextView eventDate;
-        private final TextView eventLocation;
-        private final Button deleteButton;
-        private final Button openButton;
+        private final MaterialTextView eventName;
+        private final MaterialTextView eventDate;
+        private final MaterialTextView eventLocation;
+        private final MaterialButton deleteButton;
+        private final MaterialButton openButton;
 
         public ViewHolder(View view) {
             super(view);
@@ -123,21 +158,24 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             openButton = view.findViewById(R.id.openBtn);
         }
 
-
-        public TextView getEventName() {
+        public MaterialTextView getEventName() {
             return eventName;
         }
 
-        public TextView getEventDate() {
+        public MaterialTextView getEventDate() {
             return eventDate;
         }
 
-        public TextView getEventLocation() {
+        public MaterialTextView getEventLocation() {
             return eventLocation;
         }
 
-        public Button getDeleteButton() {
+        public MaterialButton getDeleteButton() {
             return deleteButton;
+        }
+
+        public MaterialButton getOpenButton() {
+            return openButton;
         }
     }
 

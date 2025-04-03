@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.example.dory.R;
 import com.example.dory.userDatabase.UserDBHandler;
 import com.example.dory.userDatabase.UserHashed;
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class ProfileActivity extends AppCompatActivity {
     Button changeSetting;
@@ -69,6 +70,9 @@ public class ProfileActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        MaterialToolbar appbar = findViewById(R.id.topAppBar);
+        appbar.setNavigationOnClickListener(v -> finish());
 
         userName.setText(user.getName());
         userEmail.setText(user.getEmail());

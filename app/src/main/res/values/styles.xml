@@ -68,6 +68,17 @@
         <item name="strokeColor">@color/alphaBlack</item>
     </style>
 
+    <style name="SecondaryCardViewStyle">
+        <item name="android:background">@color/alphaWhite</item>
+        <item name="cardCornerRadius">50dp</item>
+        <item name="contentPaddingTop">6dp</item>
+        <item name="contentPaddingBottom">6dp</item>
+        <item name="contentPaddingRight">12dp</item>
+        <item name="contentPaddingLeft">12dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/alphaBlack</item>
+    </style>
+
     <style name="HeadingTextStyle" parent="TextAppearance.Material3.HeadlineLarge">
         <item name="android:textColor">@color/colorTextPrimary</item>
         <item name="android:textSize">34sp</item>
@@ -79,9 +90,11 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">normal</item>
     </style>
+
     <style name="h3" parent="TextAppearance.Material3.HeadlineMedium">
         <item name="android:textSize">15sp</item>
     </style>
+
     <style name="body" parent="TextAppearance.Material3.BodyLarge">
         <item name="android:textSize">15sp</item>
     </style>
@@ -112,6 +125,16 @@
         <item name="strokeWidth">1dp</item>
         <item name="cornerRadius">10dp</item>
     </style>
+
+    <style name="DeclineButtonStyle" parent="Widget.Material3.Button.ElevatedButton">
+        <item name="backgroundTint">#E53935</item>
+        <item name="iconTint">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="strokeColor">@color/colorTextPrimary</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cornerRadius">10dp</item>
+    </style>
+
     <style name="SecondaryIconButtonStyle" parent="Widget.Material3.Button.IconButton">
         <item name="backgroundTint">@color/black</item>
         <item name="iconTint">@color/white</item>
@@ -119,6 +142,13 @@
         <item name="strokeColor">@color/colorTextPrimary</item>
         <item name="strokeWidth">2dp</item>
         <item name="cornerRadius">10dp</item>
+    </style>
+
+    <style name="TabLayoutStyle" parent="Widget.Material3.TabLayout">
+        <item name="tabSelectedTextColor">@color/colorSecondary</item>
+        <item name="tabTextColor">@color/black</item>
+        <item name="android:background"></item>
+        <item name="tabIndicatorColor">@color/colorSecondary</item>
     </style>
 
 </resources>

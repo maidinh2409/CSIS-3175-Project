@@ -25,4 +25,13 @@
     <string name="invite_users_heading">Invite users</string>
     <string name="attendee_appbar_heading">Attendee</string>
     <string name="search_bar_hint">Search</string>
+    <string name="no_invitations_found">No invitations found.</string>
+    <string name="title_placeholder">title</string>
+    <string name="datetime_placeholder">datetime (yyyy-mm-dd hh:mm)</string>
+    <string name="location_placeholder">location</string>
+    <string name="description_placeholder">description</string>
+    <string name="attendees_placeholder">attendees</string>
+    <string name="capacity_placeholder">capacity</string>
+    <string name="update_btn">Update</string>
+    <string name="profile_setting">Profile Settings</string>
 </resources>

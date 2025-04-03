@@ -24,11 +24,11 @@
         app:layout_constraintVertical_bias="0.001">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/profileSAppBar"
+            android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:navigationIcon="@drawable/ic_go_back_light"
-            app:title="Profile Setting"
+            app:title="@string/profile_setting"
             app:titleTextAppearance="@style/TextAppearance.Material3.ActionBar.Title"
             app:titleTextColor="@color/colorSurface" />
     </com.google.android.material.appbar.AppBarLayout>

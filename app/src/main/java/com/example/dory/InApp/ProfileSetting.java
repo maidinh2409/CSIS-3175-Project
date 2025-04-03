@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -56,8 +58,13 @@ public class ProfileSetting extends AppCompatActivity {
             return;
         }
 
-        MaterialToolbar appBar = findViewById(R.id.profileSAppBar);
-        appBar.setNavigationOnClickListener(view -> finish());
+        MaterialToolbar appBar = findViewById(R.id.topAppBar);
+        appBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         updateSetting = findViewById(R.id.change_setting_btn_s);
         editImage = findViewById(R.id.change_img_btn_s);

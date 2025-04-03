@@ -2,17 +2,15 @@ package com.example.dory.events;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.dory.LoginPages.LoginActivity;
 import com.example.dory.userDatabase.Event;
 import com.example.dory.userDatabase.UserDBHandler;
 import com.example.dory.userDatabase.UserHashed;
@@ -27,9 +25,7 @@ import com.google.android.material.timepicker.TimeFormat;
 import com.example.dory.R;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
@@ -39,15 +35,9 @@ public class CreateEventActivity extends AppCompatActivity {
     private TextInputEditText locationInput;
     private TextInputEditText descriptionInput;
     private TextInputEditText eventNameInput;
-    private TextView headerText;
     private TextInputEditText capacityInput;
     private TextInputEditText durationInput;
-    private List<UserHashed> invitees = new ArrayList<>();
-    private boolean[] checkedInvitees = new boolean[invitees.size()];
-    private List<UserHashed> selectedInvitees = new ArrayList<>();
-
     private UserDBHandler userDb;
-    private ActivityResultLauncher<Intent> userSelectionLauncher;
     private UserHashed currUser;
 
     @Override
@@ -62,7 +52,6 @@ public class CreateEventActivity extends AppCompatActivity {
         });
 
         userDb = new UserDBHandler(this);
-        invitees = userDb.getAllUsers();
         locationInput = findViewById(R.id.event_location_input);
         descriptionInput = findViewById(R.id.event_desc_input);
         eventNameInput = findViewById(R.id.event_name_input);
@@ -73,26 +62,21 @@ public class CreateEventActivity extends AppCompatActivity {
             Intent extra = getIntent();
             if (extra == null) {
                 Toast.makeText(this, "No user logged in!", Toast.LENGTH_SHORT).show();
-                Log.e("CreateEventActivity", "No user logged in!");
+                startActivity(new Intent(this, LoginActivity.class));
             } else {
                 currUser = (UserHashed) extra.getSerializableExtra("currUser");
                 if (currUser == null) {
-                    Log.e("CreateEventActivity", "Current user is null");
-                    currUser = new UserHashed("John Doe", "john@example.com", "password", "Organizer", "Organizer", "", "DC", "", 901);
+                    Toast.makeText(this, "No user logged in!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this, LoginActivity.class));
                 }
-                Log.d("CreateEventActivity", "Current user: " + currUser.getName());
             }
         }
 
-
         MaterialButton createBtn = findViewById(R.id.create_event_btn);
         createBtn.setOnClickListener(view -> {
-            Log.d("CreateEventActivity", "create button clicked");
             if (!validateForm()) {
-                Log.d("CreateEventActivity", "Form validation failed");
                 return;
             }
-            Log.d("CreateEventActivity", "Form validation passed");
             String eventName = Objects.requireNonNull(eventNameInput.getText()).toString();
             String description = Objects.requireNonNull(descriptionInput.getText()).toString();
             String location = Objects.requireNonNull(locationInput.getText()).toString();
@@ -100,54 +84,56 @@ public class CreateEventActivity extends AppCompatActivity {
             int eventCapacity = Integer.parseInt(Objects.requireNonNull(capacityInput.getText()).toString());
             int duration = Integer.parseInt(Objects.requireNonNull(durationInput.getText()).toString());
 
-            SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
             try {
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTime(Objects.requireNonNull(inputFormat.parse(dateTime)));
+                calendar.setTime(Objects.requireNonNull(format.parse(dateTime)));
 
-                String formattedStartDateTime = outputFormat.format(calendar.getTime());
+                String StartDateTime = format.format(calendar.getTime());
                 calendar.add(Calendar.HOUR_OF_DAY, duration);
-                String formattedEndDateTime = outputFormat.format(calendar.getTime());
+                String EndDateTime = format.format(calendar.getTime());
                 int eventID = generateRandomId();
-                Log.d("CreateEventActivity", "eventID: " + eventID);
-                Log.d("CreateEventActivity", "curr user: " + (currUser == null));
-                Event event = new Event(eventID, currUser.getUser_id(), eventName, description, formattedStartDateTime, formattedEndDateTime, location, eventCapacity);
+                Event event = new Event(eventID, currUser.getUser_id(), eventName, description, StartDateTime, EndDateTime, location, eventCapacity);
 
-                boolean result = userDb.addEvent(event.eventID, currUser.getUser_id(), eventName, description, formattedStartDateTime, formattedEndDateTime, location, eventCapacity);
+                boolean result = userDb.addEvent(event.eventID, currUser.getUser_id(), eventName, description, StartDateTime, EndDateTime, location, eventCapacity);
                 if (!result) {
-                    Log.d("CreateEventActivity", "Error creating event in result: " + result);
                     Toast.makeText(CreateEventActivity.this, "Error creating event", Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.d("CreateEventActivity", "Event created: " + currUser.getUser_id());
                     Toast.makeText(CreateEventActivity.this, "Event created!", Toast.LENGTH_LONG).show();
                     clearForm();
                     startActivity(new Intent(CreateEventActivity.this, UserSelectionActivity.class)
                             .putExtra("eventObj", event)
                             .putExtra("organizerId", currUser.getUser_id()));
+                    userDb.close();
+                    finish();
                 }
             } catch (Exception e) {
-                Log.d("CreateEventActivity", "Error parsing date: " + e.getMessage());
                 Toast.makeText(CreateEventActivity.this, "Error creating event", Toast.LENGTH_SHORT).show();
             }
         });
 
-
         MaterialToolbar appBar = findViewById(R.id.topAppBar);
         appBar.setNavigationOnClickListener(view -> finish());
 
-
+        // Dialog to select date and time
         dateInput = findViewById(R.id.event_datetime_input);
         dateInput.setOnClickListener(view -> showDatePickerDialog());
-
     }
 
+    /**
+     * generates a random ID using UUID and current timestamp. Ensures uniqueness and is always positive
+     *
+     * @return random ID
+     */
     private int generateRandomId() {
         return ((UUID.randomUUID().hashCode() & 0x7fffffff)
                 + (int) (System.currentTimeMillis() % 100000)) & 0x7fffffff;
     }
 
+    /**
+     * clears all input fields in the form.
+     */
     private void clearForm() {
         eventNameInput.setText("");
         descriptionInput.setText("");
@@ -157,6 +143,11 @@ public class CreateEventActivity extends AppCompatActivity {
         durationInput.setText("");
     }
 
+    /**
+     * validates all input fields in the form.
+     *
+     * @return boolean
+     */
     private boolean validateForm() {
         boolean isValid = true;
         if (eventNameInput.getText() == null || eventNameInput.getText().toString().trim().isEmpty()) {
@@ -218,6 +209,9 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * shows a date picker dialog to select a date and time.
+     */
     private void showDatePickerDialog() {
         CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder().setValidator(DateValidatorPointForward.now());
         MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker().setTitleText("Select date").setSelection(MaterialDatePicker.todayInUtcMilliseconds()).setCalendarConstraints(constraintsBuilder.build()).build();
@@ -232,6 +226,11 @@ public class CreateEventActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * shows a time picker dialog to select a time.
+     *
+     * @param dateCalendar the calendar object to set the time on
+     */
     private void showMaterialTimePicker(Calendar dateCalendar) {
         int hour = dateCalendar.get(Calendar.HOUR_OF_DAY);
         int minute = dateCalendar.get(Calendar.MINUTE);
@@ -247,11 +246,10 @@ public class CreateEventActivity extends AppCompatActivity {
             dateCalendar.set(Calendar.MINUTE, selectedMinute);
             dateCalendar.set(Calendar.SECOND, 0);
 
-            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
             String finalDateTime = format.format(dateCalendar.getTime());
 
             dateInput.setText(finalDateTime);
-            Toast.makeText(CreateEventActivity.this, "Selected: " + finalDateTime, Toast.LENGTH_LONG).show();
         });
     }
 

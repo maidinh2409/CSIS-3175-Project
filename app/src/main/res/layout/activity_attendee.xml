@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:background="@drawable/attendee_gradient"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -26,19 +27,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:navigationIcon="@drawable/ic_home"
+            app:menu="@menu/appbar_nav_menu"
             app:title="@string/attendee_appbar_heading"
             app:titleTextAppearance="@style/TextAppearance.Material3.ActionBar.Title"
             app:titleTextColor="@color/colorSurface" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- The area where Fragments are loaded -->
+    <!--  Fragments are loaded here -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <!-- Bottom navigation with Material 3 style -->
+    <!-- Bottom navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         style="@style/Widget.Material3.BottomNavigationView"

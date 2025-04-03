@@ -6,14 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.dory.InApp.ProfileActivity;
 import com.example.dory.MainActivity;
 import com.example.dory.R;
 import com.example.dory.user.AttendeeActivity;

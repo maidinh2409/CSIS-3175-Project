@@ -1,10 +1,10 @@
 package com.example.dory.user;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,21 +16,25 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dory.InApp.ProfileActivity;
 import com.example.dory.R;
 import com.example.dory.events.CreateEventActivity;
+import com.example.dory.events.EventActivity;
 import com.example.dory.events.EventAdapter;
 import com.example.dory.userDatabase.Event;
-import com.example.dory.userDatabase.User;
 import com.example.dory.userDatabase.UserDBHandler;
 import com.example.dory.userDatabase.UserHashed;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class OrganizerActivity extends AppCompatActivity {
+public class OrganizerActivity extends AppCompatActivity implements EventAdapter.OnEventActionListener {
     private TextInputEditText eventFilterEditText;
     private EventAdapter eventAdapter;
     private MaterialButton createEventBtn;
@@ -51,21 +55,34 @@ public class OrganizerActivity extends AppCompatActivity {
             return insets;
         });
 
+
         if (savedInstanceState == null) {
             Intent extra = getIntent();
             if (extra == null) {
                 Toast.makeText(this, "No user logged in!", Toast.LENGTH_SHORT).show();
-                Log.e("CreateEventActivity", "No user logged in!");
             } else {
                 headerText = findViewById(R.id.user_heading);
                 currUser = (UserHashed) extra.getSerializableExtra("currUser");
                 if (currUser == null) {
-                    currUser = new UserHashed("John Doe", "john@example.com", "password", "Organizer", "Organizer", "", "DC", "", 901);
+                    Toast.makeText(this, "No user logged in!", Toast.LENGTH_SHORT).show();
+                    finish();
+                    return;
                 }
-                Log.d("CreateEventActivity", "Current user: " + currUser.getName());
                 headerText.setText(String.format("Hello, %s", currUser.getName()));
             }
         }
+
+        MaterialToolbar appBar = findViewById(R.id.topAppBar);
+        appBar.setNavigationOnClickListener(view -> finish());
+        appBar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.profileIcon) {
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.putExtra("currUser", currUser);
+                startActivity(intent);
+                return true;
+            }
+            return false;
+        });
 
         db = new UserDBHandler(this);
         eventList = db.viewEventsForOrganizer(Integer.toString(currUser.getUser_id()));
@@ -81,7 +98,7 @@ public class OrganizerActivity extends AppCompatActivity {
         }
 
         eventListView.setLayoutManager(new LinearLayoutManager(this));
-        eventAdapter = new EventAdapter(eventList);
+        eventAdapter = new EventAdapter(eventList, true, this);
         eventListView.setAdapter(eventAdapter);
 
         eventFilterEditText = findViewById(R.id.event_filter);
@@ -106,24 +123,60 @@ public class OrganizerActivity extends AppCompatActivity {
         db = new UserDBHandler(this);
         createEventBtn = findViewById(R.id.create_event_btn);
         createEventBtn.setOnClickListener(v -> {
-//            db.addNewUser(new User("John doe", "john@example.com", "password", "Organizer", "Organizer"));
-//            db.addNewUser(new User("Jane doe", "jane@example.com", "password", "Attendee", "Attendee"));
-//            db.addNewUser(new User("Jack doe", "jack@example.com", "password", "Attendee", "Attendee"));
-//            db.addNewUser(new User("Jill doe", "jill@example.com", "password", "Attendee", "Attendee"));
-
-
-//            db.addEvent(2123, currUser.getUser_id(), "Event Title", "Event Description", "2023-10-01", "2023-10-02", "Location", 0);
-//            db.addEvent(2124, currUser.getUser_id(), "Event Title 2", "Event Description 2", "2023-10-01", "2023-10-02", "Location 2", 0);
-//            db.addEvent(2125, currUser.getUser_id(), "Event Title 3", "Event Description 3", "2023-10-01", "2023-10-02", "Location 3", 0);
-//            db.addEvent(2126, currUser.getUser_id(), "Event Title 4", "Event Description 4", "2023-10-01", "2023-10-02", "Location 4", 0);
-//            db.addEvent(2127, currUser.getUser_id(), "Event Title 5", "Event Description 5", "2023-10-01", "2023-10-02", "Location 5", 0);
-//            db.addEvent(2128, currUser.getUser_id(), "Event Title 6", "Event Description 6", "2023-10-01", "2023-10-02", "Location 6", 0);
-
-
             Intent intent = new Intent(this, CreateEventActivity.class);
             intent.putExtra("currUser", currUser);
             startActivity(intent);
         });
 
+    }
+
+    /**
+     * refreshes the event list when the activity is resumed
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        eventList.clear();
+        eventList.addAll(db.viewEventsForOrganizer(Integer.toString(currUser.getUser_id())));
+        eventAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * opens the event activity when an event is clicked
+     *
+     * @param event
+     */
+    @Override
+    public void onOpen(Event event) {
+        if (event != null) {
+            Intent intent = new Intent(this, EventActivity.class);
+            intent.putExtra("currUser", currUser);
+            intent.putExtra("eventObj", event);
+            startActivity(intent);
+        }
+        ;
+    }
+
+    /**
+     * deletes an event from the database and updates the event list
+     *
+     * @param event
+     */
+    @Override
+    public void onDelete(Event event) {
+        MaterialAlertDialogBuilder deleteDialog = new MaterialAlertDialogBuilder(this)
+                .setTitle("Are you sure you want to delete this event?")
+                .setNeutralButton("Cancel", null)
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    db = new UserDBHandler(this);
+                    if (db.delEvent(event.getEventID())) {
+                        eventAdapter.removeEvent(event);
+                        Toast.makeText(this, "Event deleted successfully: ", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Failed to delete event", Toast.LENGTH_SHORT).show();
+                    }
+                    db.close();
+                });
+        deleteDialog.show();
     }
 }

@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     Button loginBtn;
     Button registrationBtn;
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

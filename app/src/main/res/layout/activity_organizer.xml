@@ -26,6 +26,7 @@
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:menu="@menu/appbar_nav_menu"
             app:navigationIcon="@drawable/ic_home"
             app:title="@string/organizer_appbar_title"
             app:titleTextAppearance="@style/TextAppearance.Material3.ActionBar.Title"

@@ -37,7 +37,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation(libs.glide) // Glide từ Version Catalog
+    implementation(libs.glide)
+    implementation(libs.legacy.support.v4)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx) // Glide từ Version Catalog
     annotationProcessor(libs.glideCompiler) // Glide Compiler
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
