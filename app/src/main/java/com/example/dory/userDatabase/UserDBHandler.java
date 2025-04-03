@@ -888,4 +888,32 @@ public class UserDBHandler extends SQLiteOpenHelper {
         cursor.close();
         return InvitationArray;
     }
+
+    /**
+     * Retrieves a list of attendees who have accepted an invitation for a given event ID.
+     *
+     * @param eventID The ID of the event for which to retrieve accepted attendees.
+     * @return An ArrayList of {@link Invitation} objects representing attendees who have accepted the invitation.
+     */
+    public ArrayList<Invitation> getAttendeesForEventID(int eventID) {
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        ArrayList<Invitation> InvitationArray = new ArrayList<>();
+
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + TABLE2 + " WHERE " + T2COL2 + " = " + eventID + " AND " + T2COL4 + " = 'ACCEPTED'", null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                InvitationArray.add(new Invitation(
+                        cursor.getInt(0),
+                        cursor.getInt(1),
+                        cursor.getInt(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return InvitationArray;
+    }
 }
